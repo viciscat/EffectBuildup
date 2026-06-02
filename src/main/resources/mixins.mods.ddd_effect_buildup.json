@@ -1,7 +1,7 @@
 {
-	"package": "",
+	"package": "io.github.viciscat.buildup.mixin.mods",
 	"required": true,
-	"refmap": "${mixin_refmap}",
+	"refmap": "mixins.ddd_effect_buildup.refmap.json",
 	"target": "@env(DEFAULT)",
 	"minVersion": "0.8.5",
 	"compatibilityLevel": "JAVA_8",
