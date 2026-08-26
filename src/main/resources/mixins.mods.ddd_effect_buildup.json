@@ -1,11 +1,14 @@
 {
-	"package": "io.github.viciscat.buildup.mixin.mods",
-	"required": true,
-	"refmap": "mixins.ddd_effect_buildup.refmap.json",
-	"target": "@env(DEFAULT)",
-	"minVersion": "0.8.5",
-	"compatibilityLevel": "JAVA_8",
-	"mixins": [],
-	"server": [],
-	"client": []
+  "package": "io.github.viciscat.buildup.mixin.mods",
+  "required": true,
+  "refmap": "mixins.ddd_effect_buildup.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "GenericProjectileMixin",
+    "PartMaterialTypeAccessor"
+  ],
+  "server": [],
+  "client": []
 }
