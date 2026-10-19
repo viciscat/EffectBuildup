@@ -1,7 +1,6 @@
 package io.github.viciscat.buildup.effect;
 
 import io.github.viciscat.buildup.BuildupSounds;
-import io.github.viciscat.buildup.BuildupUtils;
 import io.github.viciscat.buildup.network.BuildupPacketHandler;
 import io.github.viciscat.buildup.network.S2CBleedOutSlash;
 import io.github.viciscat.buildup.particle.BasicParticle;
@@ -11,7 +10,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class BleedOutEffect extends EffectInstance {

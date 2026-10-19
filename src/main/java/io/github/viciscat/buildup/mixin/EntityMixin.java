@@ -1,6 +1,5 @@
 package io.github.viciscat.buildup.mixin;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import io.github.viciscat.buildup.capabilities.EffectTracker;
@@ -9,7 +8,6 @@ import io.github.viciscat.buildup.effect.StunningEffect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.Inject;
 
 import java.util.Optional;
 import java.util.stream.Stream;

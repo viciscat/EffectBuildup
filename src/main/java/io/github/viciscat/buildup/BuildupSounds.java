@@ -1,6 +1,5 @@
 package io.github.viciscat.buildup;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.SoundEvent;
 

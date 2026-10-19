@@ -4,7 +4,6 @@ import io.github.viciscat.buildup.ddd_effect_buildup.Tags;
 import io.github.viciscat.buildup.effect.BuildupEffect;
 import io.github.viciscat.buildup.effect.Effects;
 import io.github.viciscat.buildup.network.BuildupUpdate;
-import io.github.viciscat.buildup.network.EffectUpdate;
 import it.unimi.dsi.fastutil.objects.Object2FloatLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
 import net.minecraft.client.Minecraft;

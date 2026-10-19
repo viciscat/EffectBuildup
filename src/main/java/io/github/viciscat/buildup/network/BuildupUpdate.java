@@ -2,7 +2,6 @@ package io.github.viciscat.buildup.network;
 
 import io.github.viciscat.buildup.effect.BuildupEffect;
 import io.github.viciscat.buildup.effect.Effects;
-import io.github.viciscat.buildup.effect.InstancedEffect;
 import net.minecraft.network.PacketBuffer;
 
 public record BuildupUpdate(BuildupEffect effect, float value, float max, boolean decay) {

@@ -1,6 +1,5 @@
 package io.github.viciscat.buildup.particle;
 
-import io.github.viciscat.buildup.BuildupMod;
 import io.github.viciscat.buildup.BuildupUtils;
 import io.github.viciscat.buildup.ddd_effect_buildup.Tags;
 import net.minecraft.client.Minecraft;
@@ -12,7 +11,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;

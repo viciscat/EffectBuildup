@@ -5,7 +5,6 @@ import io.github.viciscat.buildup.capabilities.EffectTracker;
 import io.github.viciscat.buildup.ddd_effect_buildup.Tags;
 import io.github.viciscat.buildup.particle.BasicParticle;
 import io.github.viciscat.buildup.particle.BuildupParticleManager;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;

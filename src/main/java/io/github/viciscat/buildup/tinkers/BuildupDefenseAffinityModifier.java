@@ -6,7 +6,6 @@ import io.github.viciscat.buildup.BuildupItems;
 import io.github.viciscat.buildup.effect.BuildupEffect;
 import net.minecraft.nbt.NBTTagCompound;
 import slimeknights.tconstruct.library.modifiers.ModifierAspect;
-import slimeknights.tconstruct.tools.modifiers.ToolModifier;
 
 public class BuildupDefenseAffinityModifier extends ArmorModifier {
     public BuildupDefenseAffinityModifier(BuildupEffect effect) {

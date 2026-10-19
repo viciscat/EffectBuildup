@@ -1,14 +1,9 @@
 package io.github.viciscat.buildup.particle;
 
 import io.github.viciscat.buildup.BuildupUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class ParticleSequenceWound extends ParticleSequence {
     private static final TextureAtlasSprite PARTICLE = BuildupParticleManager.createSprite("wound", 128, 124, 48, 48);
