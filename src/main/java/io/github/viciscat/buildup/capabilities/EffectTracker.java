@@ -6,6 +6,8 @@ import io.github.viciscat.buildup.effect.InstancedEffect;
 import io.github.viciscat.buildup.network.EffectUpdate;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -15,6 +17,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -33,12 +36,15 @@ public interface EffectTracker extends INBTSerializable<NBTTagCompound> {
         return entity.getCapability(CAPABILITY, null);
     }
 
+    static Optional<EffectTracker> getOptional(EntityLivingBase entity) {
+        return Optional.ofNullable(get(entity));
+    }
+
     <T extends EffectInstance> T getOrCreateInstance(InstancedEffect<T> effect);
     <T extends EffectInstance> Optional<T> getInstance(InstancedEffect<T> effect);
-
     void tick();
-
     void update(List<EffectUpdate> updates);
+    void onStartTracking(EntityPlayerMP player);
 
     class Storage implements Capability.IStorage<EffectTracker> {
         public static final EffectTracker.Storage INSTANCE = new EffectTracker.Storage();
@@ -64,9 +70,24 @@ public interface EffectTracker extends INBTSerializable<NBTTagCompound> {
 
     @SubscribeEvent
     static void onEntityTick(LivingEvent.LivingUpdateEvent event) {
-        if (event.getEntityLiving().world.isRemote) return;
         EffectTracker tracker = get(event.getEntityLiving());
         if (tracker == null) return;
         tracker.tick();
+    }
+
+    @SubscribeEvent
+    static void onPlayerStartTracking(PlayerEvent.StartTracking event) {
+        if (!(event.getTarget() instanceof EntityLivingBase base)) return;
+        EffectTracker tracker = get(base);
+        if (tracker == null) return;
+        tracker.onStartTracking((EntityPlayerMP) event.getEntityPlayer());
+    }
+
+    @SubscribeEvent
+    static void onPlayerJoin(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
+        EntityPlayer player = event.player;
+        EffectTracker tracker = get(player);
+        if (tracker == null) return;
+        tracker.onStartTracking((EntityPlayerMP) player);
     }
 }

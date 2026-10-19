@@ -1,5 +1,6 @@
 package io.github.viciscat.buildup.capabilities;
 
+import io.github.viciscat.buildup.BuildupMod;
 import io.github.viciscat.buildup.effect.BuildupEffect;
 import io.github.viciscat.buildup.effect.EffectInstance;
 import io.github.viciscat.buildup.effect.Effects;
@@ -79,10 +80,15 @@ public class EffectTrackerImpl implements EffectTracker, ICapabilitySerializable
 
     @Override
     public void tick() {
-        if (entity.world.isRemote) return;
+        if (entity.world.isRemote) {
+            //if (BuildupMod.debug()) BuildupMod.LOGGER.info("Ticking client");
+            map.values().forEach(instance -> instance.clientTick(entity));
+            return;
+        }
         List<InstancedEffect<?>> toRemove = new ArrayList<>();
         Set<InstancedEffect<?>> toSync = new ReferenceArraySet<>();
         for (Map.Entry<InstancedEffect<?>, EffectInstance> entry : map.entrySet()) {
+            //if (BuildupMod.debug()) BuildupMod.LOGGER.info("Ticking {} on the server for {}", entry.getKey().getId(), entity);
             entry.getValue().tick(entity);
             if (entry.getValue().getDuration() <= 0) {
                 toRemove.add(entry.getKey());
@@ -92,6 +98,7 @@ public class EffectTrackerImpl implements EffectTracker, ICapabilitySerializable
             }
         }
         for (InstancedEffect<?> effect : toRemove) {
+            if (BuildupMod.debug()) BuildupMod.LOGGER.info("Removing effect {} from '{}' ({})", effect.getId(), entity.getName(), entity.getEntityId());
             map.remove(effect);
         }
         toSync.addAll(toRemove);
@@ -115,7 +122,23 @@ public class EffectTrackerImpl implements EffectTracker, ICapabilitySerializable
     }
 
     @Override
+    public void onStartTracking(EntityPlayerMP player) {
+        List<EffectUpdate> updates = map.entrySet().stream().map(entry -> {
+            ByteBuf buffer = Unpooled.buffer();
+            entry.getValue().write(new PacketBuffer(buffer));
+            EffectUpdate.update(entry.getKey(), buffer);
+            return EffectUpdate.update(entry.getKey(), buffer);
+        }).toList();
+        if (player == entity) {
+            BuildupPacketHandler.INSTANCE.sendTo(new S2CUpdateOwnEffects(updates), player);
+        } else {
+            BuildupPacketHandler.INSTANCE.sendTo(new S2CUpdateEntityEffects(entity, updates), player);
+        }
+    }
+
+    @Override
     public void update(List<EffectUpdate> updates) {
+        if (BuildupMod.debug()) BuildupMod.LOGGER.info("Effect updates: {}", updates);
         for (EffectUpdate update : updates) {
             if (update.removed()) {
                 map.remove(update.effect());

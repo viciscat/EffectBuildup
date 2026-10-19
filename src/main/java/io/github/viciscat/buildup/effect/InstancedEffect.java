@@ -10,26 +10,33 @@ import javax.annotation.Nullable;
 public class InstancedEffect<T extends EffectInstance> extends BuildupEffect {
 
     private final InstanceFactory<T> instanceFactory;
-    private @Nullable EffectApplier additionalApplier;
+    private final @Nullable EffectApplier additionalApplier;
 
-    public InstancedEffect(String id, String damageTypeName, InstanceFactory<T> instanceFactory) {
-        this(id, damageTypeName, instanceFactory, null);
+    public InstancedEffect(String id, BuildupEffect.Display display, String damageTypeName, InstanceFactory<T> instanceFactory) {
+        this(id, display, damageTypeName, instanceFactory, null);
     }
 
-    public InstancedEffect(String id, String damageTypeName, InstanceFactory<T> instanceFactory, @Nullable EffectApplier additionalApplier) {
-        super(id, damageTypeName);
+    public InstancedEffect(String id, BuildupEffect.Display display, String damageTypeName, InstanceFactory<T> instanceFactory, @Nullable EffectApplier additionalApplier) {
+        super(id, display, damageTypeName);
         this.instanceFactory = instanceFactory;
         this.additionalApplier = additionalApplier;
     }
 
     @Override
-    void applyEffect(EntityLivingBase entity, int procDamage, @Nullable DamageSource source) {
+    public void applyEffect(EntityLivingBase entity, int procDamage, @Nullable DamageSource source) {
         EffectTracker tracker = EffectTracker.get(entity);
         if (tracker == null) return;
         tracker.getOrCreateInstance(this).proc(entity, procDamage, source);
         if (additionalApplier != null) {
             additionalApplier.applyEffect(entity, procDamage, source);
         }
+    }
+
+    @Override
+    public void applyClientEffect(EntityLivingBase base) {
+        EffectTracker tracker = EffectTracker.get(base);
+        if (tracker == null) return;
+        tracker.getOrCreateInstance(this).clientProc(base);
     }
 
     public InstanceFactory<T> getInstanceFactory() {

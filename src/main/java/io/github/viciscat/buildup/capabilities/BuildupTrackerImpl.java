@@ -5,13 +5,19 @@ import io.github.viciscat.buildup.MaterialAndPart;
 import io.github.viciscat.buildup.config.BuildupConfig;
 import io.github.viciscat.buildup.config.DefenseConfig;
 import io.github.viciscat.buildup.effect.BuildupEffect;
+import io.github.viciscat.buildup.effect.Effects;
+import io.github.viciscat.buildup.effect.UnstableEffect;
 import io.github.viciscat.buildup.enchantment.BuildupEnchantments;
 import io.github.viciscat.buildup.mixin.mods.PartMaterialTypeAccessor;
+import io.github.viciscat.buildup.network.*;
 import io.github.viciscat.buildup.tinkers.BuildupTinkerModifiers;
 import it.unimi.dsi.fastutil.objects.Reference2FloatMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -37,14 +43,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 class BuildupTrackerImpl implements BuildupTracker, ICapabilitySerializable<NBTTagCompound> {
     private DDDMaps.DamageMap prevDamageMap = DDDMaps.newDamageMap();
     private final EntityLivingBase entity;
     private final DefenseConfig defense;
     private final Map<BuildupEffect, BuildUp> buildup = new Reference2ObjectOpenHashMap<>();
+    private final Set<BuildupEffect> needClientSend = new ReferenceOpenHashSet<>();
+    private final boolean isPlayer;
     public BuildupTrackerImpl(EntityLivingBase entity) {
         this.entity = entity;
+        this.isPlayer = entity instanceof EntityPlayerMP;
         this.defense = BuildupConfig.get().entityDefense().get(entity).orElse(DefenseConfig.EMPTY);
     }
 
@@ -52,6 +62,9 @@ class BuildupTrackerImpl implements BuildupTracker, ICapabilitySerializable<NBTT
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
         compound.setTag("previous_damage", DDDBaseMap.toNBT(prevDamageMap));
+        NBTTagCompound buildupTag = new NBTTagCompound();
+        buildup.forEach((effect, buildUp) -> buildupTag.setFloat(effect.getId(), buildUp.current));
+        compound.setTag("buildup", buildupTag);
         return compound;
     }
 
@@ -59,27 +72,56 @@ class BuildupTrackerImpl implements BuildupTracker, ICapabilitySerializable<NBTT
     public void deserializeNBT(NBTTagCompound nbt) {
         DDDMaps.DamageMap map = DDDMaps.newDamageMap();
         map.putAll(DDDBaseMap.fromNBT(nbt.getTagList("previous_damage", (byte) 10), () -> 0f));
+        NBTTagCompound buildupTag = nbt.getCompoundTag("buildup");
+        for (String buildupId : buildupTag.getKeySet()) {
+            BuildupEffect effect = Effects.get(buildupId);
+            if (effect == null) continue;
+            buildup.computeIfAbsent(effect, BuildUp::new).current = buildupTag.getFloat(buildupId);
+        }
         prevDamageMap = map;
     }
 
     public void hit(DamageSource source, Reference2FloatMap<BuildupEffect> buildups, DDDMaps.DamageMap procDamage, boolean ignoreImmunities) {
         this.prevDamageMap = procDamage;
+        if (isPlayer) needClientSend.addAll(buildups.keySet());
         buildups.forEach((effect, amount) -> {
-            boolean trigger = buildup.computeIfAbsent(effect, BuildUp::new).add(amount, ignoreImmunities);
-            if (trigger) {
-                BuildupMod.LOGGER.info("Applying effect '{}' to {} due to hit", effect, entity);
+            amount *= EffectTracker.getOptional(entity).flatMap(effectTracker -> effectTracker.getInstance(Effects.UNSTABLE)).map(UnstableEffect::getBuildupMultiplier).orElse(1f);
+            int triggers = buildup.computeIfAbsent(effect, BuildUp::new).add(amount, ignoreImmunities);
+            for (int i = 0; i < triggers; i++) {
+                int damage = procDamage.getOrDefault(effect.getDamageType(), -1f).intValue();
+                if (damage < 0) {
+                    damage = procDamage.values().stream().mapToInt(Float::intValue).sum() / 2;
+                }
+                BuildupMod.LOGGER.info("Applying effect {} to '{}' ({}) with {} damage", effect.getId(), entity.getName(), entity.getEntityId(), damage);
+                effect.applyEffect(entity, damage, source);
+                S2CBuildupProc message = new S2CBuildupProc(entity, effect);
+                BuildupPacketHandler.INSTANCE.sendToAllTracking(message, entity);
+                if (isPlayer) BuildupPacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) entity);
             }
         });
     }
 
     @Override
     public void tick() {
+        Set<BuildupEffect> decay = new ReferenceOpenHashSet<>();
         if (entity.ticksExisted % 20 == 0) {
             buildup.forEach((effect, buildup) -> {
+                final boolean wasZero = buildup.current <= 0;
                 if (buildup.decay()) {
-                    BuildupMod.LOGGER.info("Applying effect '{}' to {} due to decay", effect, entity);
+                    if (BuildupMod.debug()) BuildupMod.LOGGER.info("Applying effect '{}' to {} due to decay", effect, entity);
+                }
+                if (buildup.current > 0 || !wasZero) {
+                    if (needClientSend.add(effect)) decay.add(effect);
                 }
             });
+        }
+        if (isPlayer && !needClientSend.isEmpty()) {
+            List<BuildupUpdate> updates = needClientSend.stream().map(effect -> {
+                BuildUp buildUp = buildup.get(effect);
+                return new BuildupUpdate(effect, buildUp.current, buildUp.max, decay.contains(effect));
+            }).toList();
+            BuildupPacketHandler.INSTANCE.sendTo(new S2CUpdateOwnBuildup(updates), (EntityPlayerMP) entity);
+            needClientSend.clear();
         }
     }
 
@@ -100,30 +142,36 @@ class BuildupTrackerImpl implements BuildupTracker, ICapabilitySerializable<NBTT
         private final BuildupEffect effect;
         private final DDDDamageType damageType;
         private float current;
+        private float max;
         public BuildUp(BuildupEffect effect) {
             this.effect = effect;
             this.damageType = effect.getDamageType();
         }
 
         /**
-         * @return true if the effect should be triggered
+         * @return the amount of time the effect should be triggered
          */
-        private boolean add(float amount, boolean ignoreImmunities) {
-            if (!ignoreImmunities && DDDAPI.accessor.getMobResistances(entity).filter(res -> res.hasImmunity(damageType)).isPresent()) return false;
+        private int add(float amount, boolean ignoreImmunities) {
+            if (!ignoreImmunities && DDDAPI.accessor.getMobResistances(entity).filter(res -> res.hasImmunity(damageType)).isPresent()) return 0;
             current += amount;
-            float max = calculateMax();
-            BuildupMod.LOGGER.info("{}: {} now at {} / {}", entity, effect, current, max);
-            if (current >= max) {
-                current = 0;
-                return true;
+            this.max = calculateMax();
+            if (BuildupMod.debug()) BuildupMod.LOGGER.info("{}: {} now at {} / {}", entity, effect, current, max);
+            int triggers = 0;
+            while (current >= max) {
+                triggers++;
+                current -= max;
             }
-            return false;
+            if (triggers > 0) {
+                current = 0;
+            }
+            return triggers;
         }
 
         private boolean decay() {
             if (current <= 0) return false;
             current--;
-            if (current > calculateMax()) {
+            this.max = calculateMax();
+            if (current > this.max) {
                 current = 0;
                 return true;
             }
@@ -138,11 +186,12 @@ class BuildupTrackerImpl implements BuildupTracker, ICapabilitySerializable<NBTT
                 record DistConf(IArmorDistribution dist, DefenseConfig defense) {}
                 ItemStack stack = entity.getItemStackFromSlot(slot);
                 final int extraDefense = EnchantmentHelper.getEnchantmentLevel(BuildupEnchantments.BUILDUP_DEFENSE, stack) * 100 +
-                        BuildupTinkerModifiers.getLevel(stack, BuildupTinkerModifiers.BUILDUP_DEFENSE) * 110;
+                        BuildupTinkerModifiers.getCurrent(stack, BuildupTinkerModifiers.BUILDUP_DEFENSE);
                 max += DDDAPI.accessor.getArmorResistances(stack)
                         .flatMap(dist -> BuildupConfig.get().armorDefense().get(stack.getItem()).map(c -> new DistConf(dist, c)))
                         .map(distConf -> distConf.dist().distributeArmor(distConf.defense().global() + extraDefense, 0).get(damageType).getArmor() + distConf.defense().extras().getInt(effect))
                         .orElse(0f);
+                max += BuildupTinkerModifiers.getCurrent(stack, BuildupTinkerModifiers.DEFENSE_AFFINITY.get(effect));
                 if (stack.getItem() instanceof TinkersItem tinkersItem) {
                     List<Material> materials = TinkerUtil.getMaterialsFromTagList(TagUtil.getBaseMaterialsTagList(stack));
                     List<PartMaterialType> components = tinkersItem.getRequiredComponents();

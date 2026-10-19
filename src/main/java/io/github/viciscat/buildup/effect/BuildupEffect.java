@@ -8,21 +8,26 @@ import yeelp.distinctdamagedescriptions.registries.DDDRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public abstract class BuildupEffect {
     private final String id;
     private final String damageTypeName;
+    private final Display display;
     private @Nullable DDDDamageType damageType;
 
-    public BuildupEffect(String id, String damageTypeName) {
+    public BuildupEffect(String id, Display display, String damageTypeName) {
         this.id = Objects.requireNonNull(id);
+        this.display = display;
         this.damageTypeName = Objects.requireNonNull(damageTypeName);
     }
 
-    abstract void applyEffect(EntityLivingBase entity, int procDamage, @Nullable DamageSource source);
+    public abstract void applyEffect(EntityLivingBase entity, int procDamage, @Nullable DamageSource source);
+
+    public void applyClientEffect(EntityLivingBase base) {}
 
     public DDDDamageType getDamageType() {
-        return Objects.requireNonNull(this.damageType, "Damage Type not initialized");
+        return Objects.requireNonNull(this.damageType, "Damage Type not initialized (" + damageTypeName + ")");
     }
 
     public final void initializeDamageType() {
@@ -33,12 +38,33 @@ public abstract class BuildupEffect {
         return id;
     }
 
-    public static BuildupEffect create(String id, String damageTypeName, EffectApplier applier) {
-        return new BuildupEffect(id, damageTypeName) {
+    public Display getDisplay() {
+        return display;
+    }
+
+    @Override
+    public String toString() {
+        return id + "[" + damageTypeName + "]";
+    }
+
+    public static BuildupEffect create(String id, Display display, String damageTypeName, EffectApplier applier, Consumer<EntityLivingBase> clientApplier) {
+        return new BuildupEffect(id, display, damageTypeName) {
             @Override
-            void applyEffect(EntityLivingBase entity, int procDamage, @Nullable DamageSource source) {
+            public void applyEffect(EntityLivingBase entity, int procDamage, @Nullable DamageSource source) {
                 applier.applyEffect(entity, procDamage, source);
             }
+
+            @Override
+            public void applyClientEffect(EntityLivingBase base) {
+                clientApplier.accept(base);
+            }
         };
+    }
+    
+    public record Display(int iconId, int color) {
+        public Display(int iconId, int color) {
+            this.iconId = iconId;
+            this.color = 0xFF_00_00_00 | color;
+        }
     }
 }

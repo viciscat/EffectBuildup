@@ -59,7 +59,7 @@ public class BuildupEventHandler {
         if (event.getAmount() > 0) SOURCE_TO_EVENT.put(event.getSource(), event);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onEntityHurt(LivingDamageEvent event) {
         BuildupTracker tracker = BuildupTracker.get(event.getEntityLiving());
         if (tracker == null) return;
@@ -79,7 +79,8 @@ public class BuildupEventHandler {
             Capabilities.get(source.getTrueSource()).flatMap(skills -> skills.getOwned(skill)).ifPresent(skillInfo -> {
                 final int level = skillInfo instanceof InfoUpgradeable upgradeable ? upgradeable.getLevel() : 0;
                 config.map.keySet().stream().filter(s -> s.startsWith("BUILDUP:")).forEach(id -> {
-                    BuildupEffect effect = Effects.get(id.split(":", 2)[1]);
+                    BuildupEffect effect = Effects.get(id.split(":", 2)[1].trim());
+                    if (effect == null) return;
                     float v = DSLEvaluator.evaluateFloat(skill, id, level, 1);
                     addEffect.accept(effect, v);
                 });
@@ -111,10 +112,14 @@ public class BuildupEventHandler {
                     .ifPresent(applyDamageDistribution);
             ignoreImmunities = EnchantmentHelper.getMaxEnchantmentLevel(DDDEnchantments.slyStrike, base) > 0;
             int bonusBuildup = EnchantmentHelper.getMaxEnchantmentLevel(BuildupEnchantments.BUILDUP_OFFENSE, base) * 100 +
-                    BuildupTinkerModifiers.getLevel(mainhand, BuildupTinkerModifiers.BUILDUP_OFFENSE) * 100;
+                    BuildupTinkerModifiers.getCurrent(mainhand, BuildupTinkerModifiers.BUILDUP_OFFENSE);
             if (bonusBuildup > 0) {
                 DDDAPI.accessor.getDamageDistribution(mainhand).ifPresent(distribution -> distribution.distributeDamage(bonusBuildup).forEach(addType));
             }
+            Effects.forEach(effect -> {
+                int build = BuildupTinkerModifiers.getCurrent(mainhand, BuildupTinkerModifiers.OFFENSE_AFFINITY.get(effect));
+                if (build > 0) addEffect.accept(effect, (float) build);
+            });
             /*record MaterialAndType(Material material, PartMaterialTypeAccessor type) {}
             Optional.of(mainhand.getItem())
                     .filter(TinkersItem.class::isInstance)
@@ -151,13 +156,15 @@ public class BuildupEventHandler {
             }
 
         } else if (source.getImmediateSource() instanceof IProjectile projectile) {
-            DDDAPI.accessor.getDamageDistribution(projectile)
+            Optional<IDamageDistribution> distribution = DDDAPI.accessor.getDamageDistribution(projectile);
+            distribution
                     .flatMap(dist -> BuildupConfig.get().entityAttack().get((Entity) projectile).map(c -> new DistConf(dist, c)))
                     .ifPresent(applyDamageDistribution);
             ignoreImmunities = source.getTrueSource() instanceof EntityLivingBase base && EnchantmentHelper.getMaxEnchantmentLevel(DDDEnchantments.slyStrike, base) > 0;
             if (source.getImmediateSource() instanceof ExtendedProjectile extendedProjectile) {
                 for (Object2IntMap.Entry<BuildupEffect> entry : extendedProjectile.buildup$getEffectStacks().object2IntEntrySet()) {
-                    addEffect.accept(entry.getKey(), entry.getIntValue() * 100f);
+                    if (entry.getKey() == null) distribution.ifPresent(dist -> dist.distributeDamage(entry.getIntValue()).forEach(addType));
+                    else addEffect.accept(entry.getKey(), (float) entry.getIntValue());
                 }
             }
         } else {

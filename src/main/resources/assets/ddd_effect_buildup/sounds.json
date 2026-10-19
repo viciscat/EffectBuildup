@@ -1,0 +1,97 @@
+{
+  "proc.ablaze": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.ablaze",
+    "sounds": ["ddd_effect_buildup:ablaze"]
+  },
+  "proc.bleed_out": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.bleed_out",
+    "sounds": ["ddd_effect_buildup:bleed_out"]
+  },
+  "proc.bleed_out.22": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.bleed_out.22",
+    "sounds": ["ddd_effect_buildup:bleed_out_22"]
+  },
+  "proc.chain_lightning": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.chain_lightning",
+    "sounds": ["ddd_effect_buildup:chain_lightning"]
+  },
+  "proc.deadly_poison": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.deadly_poison",
+    "sounds": ["ddd_effect_buildup:deadly_poison"]
+  },
+  "proc.decayed": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.decayed",
+    "sounds": ["ddd_effect_buildup:decayed"]
+  },
+  "proc.decayed.20": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.decayed.20",
+    "sounds": ["ddd_effect_buildup:decayed_20"]
+  },
+  "proc.deconstruction": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.deconstruction",
+    "sounds": ["ddd_effect_buildup:deconstruction"]
+  },
+  "proc.destined_death": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.destined_death",
+    "sounds": ["ddd_effect_buildup:destined_death"]
+  },
+  "proc.entropy": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.entropy",
+    "sounds": ["ddd_effect_buildup:entropy"]
+  },
+  "proc.frozen": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.frozen",
+    "sounds": ["ddd_effect_buildup:frozen"]
+  },
+  "proc.frozen.20": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.frozen.20",
+    "sounds": ["ddd_effect_buildup:frozen_20"]
+  },
+  "proc.judgement": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.judgement",
+    "sounds": ["ddd_effect_buildup:judgement"]
+  },
+  "proc.judgement.2": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.judgement.2",
+    "sounds": ["ddd_effect_buildup:judgement_2"]
+  },
+  "proc.megabonk": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.megabonk",
+    "sounds": ["ddd_effect_buildup:megabonk"]
+  },
+  "proc.armor_melt": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.armor_melt",
+    "sounds": ["ddd_effect_buildup:armor_melt"]
+  },
+  "proc.shockwave": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.shockwave",
+    "sounds": ["ddd_effect_buildup:shockwave"]
+  },
+  "proc.unstable": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.unstable",
+    "sounds": ["ddd_effect_buildup:unstable"]
+  },
+  "proc.wound": {
+    "category": "neutral",
+    "subtitle": "ddd_effect_buildup.subtitle.proc.wound",
+    "sounds": ["ddd_effect_buildup:wound"]
+  }
+}

@@ -1,0 +1,102 @@
+#PARSE_ESCAPES
+# Items
+item.ddd_effect_buildup.bleed_out_affinity_gun_upgrade.name=Gun Upgrade: Bleed Out Affinity
+item.ddd_effect_buildup.megabonk_affinity_gun_upgrade.name=Gun Upgrade: Megabonk Affinity
+item.ddd_effect_buildup.wound_affinity_gun_upgrade.name=Gun Upgrade: Wound Affinity
+item.ddd_effect_buildup.ablaze_affinity_gun_upgrade.name=Gun Upgrade: Ablaze Affinity
+item.ddd_effect_buildup.frozen_affinity_gun_upgrade.name=Gun Upgrade: Frozen Affinity
+item.ddd_effect_buildup.deconstruction_affinity_gun_upgrade.name=Gun Upgrade: Deconstruction Affinity
+item.ddd_effect_buildup.entropy_affinity_gun_upgrade.name=Gun Upgrade: Entropy Affinity
+item.ddd_effect_buildup.armor_melt_affinity_gun_upgrade.name=Gun Upgrade: Armor Melt Affinity
+item.ddd_effect_buildup.deadly_poison_affinity_gun_upgrade.name=Gun Upgrade: Deadly Poison Affinity
+item.ddd_effect_buildup.shockwave_affinity_gun_upgrade.name=Gun Upgrade: Shockwave Affinity
+item.ddd_effect_buildup.chain_lightning_affinity_gun_upgrade.name=Gun Upgrade: Chain Lightning Affinity
+item.ddd_effect_buildup.decayed_affinity_gun_upgrade.name=Gun Upgrade: Decayed Affinity
+item.ddd_effect_buildup.judgement_affinity_gun_upgrade.name=Gun Upgrade: Judgement Affinity
+item.ddd_effect_buildup.unstable_affinity_gun_upgrade.name=Gun Upgrade: Unstable Affinity
+item.ddd_effect_buildup.destined_death_affinity_gun_upgrade.name=Gun Upgrade: Destined Death Affinity
+
+item.ddd_effect_buildup.bleed_out_affinity_dust.name=Bleed Out Affinity Dust
+item.ddd_effect_buildup.megabonk_affinity_dust.name=Megabonk Affinity Dust
+item.ddd_effect_buildup.wound_affinity_dust.name=Wound Affinity Dust
+item.ddd_effect_buildup.ablaze_affinity_dust.name=Ablaze Affinity Dust
+item.ddd_effect_buildup.frozen_affinity_dust.name=Frozen Affinity Dust
+item.ddd_effect_buildup.deconstruction_affinity_dust.name=Deconstruction Affinity Dust
+item.ddd_effect_buildup.entropy_affinity_dust.name=Entropy Affinity Dust
+item.ddd_effect_buildup.armor_melt_affinity_dust.name=Armor Melt Affinity Dust
+item.ddd_effect_buildup.deadly_poison_affinity_dust.name=Deadly Poison Affinity Dust
+item.ddd_effect_buildup.shockwave_affinity_dust.name=Shockwave Affinity Dust
+item.ddd_effect_buildup.chain_lightning_affinity_dust.name=Chain Lightning Affinity Dust
+item.ddd_effect_buildup.decayed_affinity_dust.name=Decayed Affinity Dust
+item.ddd_effect_buildup.judgement_affinity_dust.name=Judgement Affinity Dust
+item.ddd_effect_buildup.unstable_affinity_dust.name=Unstable Affinity Dust
+item.ddd_effect_buildup.destined_death_affinity_dust.name=Destined Death Affinity Dust
+item.ddd_effect_buildup.affinity_catalyst.name=Affinity Catalyst
+
+
+effect_buildup.ddd_effect_buildup.bleed_out=§4Bleed Out§r
+effect_buildup.ddd_effect_buildup.megabonk=§8Megabonk§r
+effect_buildup.ddd_effect_buildup.wound=§8Wound§r
+effect_buildup.ddd_effect_buildup.ablaze=§4Ablaze§r
+effect_buildup.ddd_effect_buildup.frozen=§1Frozen§r
+effect_buildup.ddd_effect_buildup.deconstruction=§bDeconstruction§r
+effect_buildup.ddd_effect_buildup.entropy=§5Entropy§r
+effect_buildup.ddd_effect_buildup.armor_melt=§2Armor Melt§r
+effect_buildup.ddd_effect_buildup.deadly_poison=§2Deadly Poison§r
+effect_buildup.ddd_effect_buildup.shockwave=§fShockwave§r
+effect_buildup.ddd_effect_buildup.chain_lightning=§eChain Lightning§r
+effect_buildup.ddd_effect_buildup.decayed=§aDecayed§r
+effect_buildup.ddd_effect_buildup.judgement=§6Judgement§r
+effect_buildup.ddd_effect_buildup.unstable=§9Unstable§r
+effect_buildup.ddd_effect_buildup.destined_death=§0Destined Death§r
+
+#modifier.bleed_out_affinity.name=§4Bleed Out§r Affinity
+#modifier.megabonk_affinity.name=§8Megabonk§r Affinity
+#modifier.wound_affinity.name=§8Wound§r Affinity
+#modifier.ablaze_affinity.name=§4Ablaze§r Affinity
+#modifier.frozen_affinity.name=§1Frozen§r Affinity
+#modifier.deconstruction_affinity.name=§bDeconstruction§r Affinity
+#modifier.entropy_affinity.name=§5Entropy§r Affinity
+#modifier.armor_melt_affinity.name=§2Armor Melt§r Affinity
+#modifier.deadly_poison_affinity.name=§2Deadly Poison§r Affinity
+#modifier.shockwave_affinity.name=§fShockwave§r Affinity
+#modifier.chain_lightning_affinity.name=§eChain Lightning§r Affinity
+#modifier.decayed_affinity.name=§aDecayed§r Affinity
+#modifier.judgement_affinity.name=§6Judgement§r Affinity
+#modifier.unstable_affinity.name=§9Unstable§r Affinity
+#modifier.destined_death_affinity.name=§0Destined Death§r Affinity
+
+modifier.bleed_out_affinity.name=Bleed Out Affinity
+modifier.megabonk_affinity.name=Megabonk Affinity
+modifier.wound_affinity.name=Wound Affinity
+modifier.ablaze_affinity.name=Ablaze Affinity
+modifier.frozen_affinity.name=Frozen Affinity
+modifier.deconstruction_affinity.name=Deconstruction Affinity
+modifier.entropy_affinity.name=Entropy Affinity
+modifier.armor_melt_affinity.name=Armor Melt Affinity
+modifier.deadly_poison_affinity.name=Deadly Poison Affinity
+modifier.shockwave_affinity.name=Shockwave Affinity
+modifier.chain_lightning_affinity.name=Chain Lightning Affinity
+modifier.decayed_affinity.name=Decayed Affinity
+modifier.judgement_affinity.name=Judgement Affinity
+modifier.unstable_affinity.name=Unstable Affinity
+modifier.destined_death_affinity.name=Destined Death Affinity
+
+modifier.buildup_offense.name=Affinity Catalyst
+modifier.buildup_defense_armor.name=Affinity Catalyst
+
+modifier.bleed_out_affinity_armor.name=Bleed Out Affinity
+modifier.megabonk_affinity_armor.name=Megabonk Affinity
+modifier.wound_affinity_armor.name=Wound Affinity
+modifier.ablaze_affinity_armor.name=Ablaze Affinity
+modifier.frozen_affinity_armor.name=Frozen Affinity
+modifier.deconstruction_affinity_armor.name=Deconstruction Affinity
+modifier.entropy_affinity_armor.name=Entropy Affinity
+modifier.armor_melt_affinity_armor.name=Armor Melt Affinity
+modifier.deadly_poison_affinity_armor.name=Deadly Poison Affinity
+modifier.shockwave_affinity_armor.name=Shockwave Affinity
+modifier.chain_lightning_affinity_armor.name=Chain Lightning Affinity
+modifier.decayed_affinity_armor.name=Decayed Affinity
+modifier.judgement_affinity_armor.name=Judgement Affinity
+modifier.unstable_affinity_armor.name=Unstable Affinity
+modifier.destined_death_affinity_armor.name=Destined Death Affinity

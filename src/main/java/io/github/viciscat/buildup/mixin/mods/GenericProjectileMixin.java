@@ -1,13 +1,18 @@
 package io.github.viciscat.buildup.mixin.mods;
 
 import io.github.viciscat.buildup.BuildupGunUpgrades;
+import io.github.viciscat.buildup.config.BuildupConfig;
 import io.github.viciscat.buildup.effect.BuildupEffect;
+import io.github.viciscat.buildup.enchantment.BuildupEnchantments;
 import io.github.viciscat.buildup.injected.ExtendedProjectile;
 import io.github.viciscat.kustweaks.capability.UpgradableGun;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,7 +34,8 @@ public class GenericProjectileMixin implements ExtendedProjectile {
 
     @Inject(method = "initProjectile", at = @At("TAIL"))
     private void onInitProjectile(World worldIn, double posX, double posY, double posZ, float yaw, float pitch, float damage, float speed, int TTL, float spread, float dmgDropStart, float dmgDropEnd, float dmgMin, float penetration, boolean blockdamage, EnumBulletFirePos firePos, CallbackInfo ci) {
-        UpgradableGun gun = UpgradableGun.get(this.shooter.getHeldItemMainhand());
+        ItemStack mainhand = this.shooter.getHeldItemMainhand();
+        UpgradableGun gun = UpgradableGun.get(mainhand);
         if (gun == null) {
             gun = UpgradableGun.getOrEmpty(this.shooter.getHeldItemOffhand());
         }
@@ -37,13 +43,25 @@ public class GenericProjectileMixin implements ExtendedProjectile {
             int stack = gun.getUpgradeStack(upgrade.gunUpgrade());
             if (stack > 0) {
                 if (buildup$effects.isEmpty()) buildup$effects = new Object2IntOpenHashMap<>();
-                buildup$effects.put(upgrade.effect(), stack);
+                buildup$effects.put(upgrade.effect(), stack * 4);
             }
         }
+        BuildupConfig.get().itemAttack().get(mainhand.getItem()).ifPresent(attackConfig -> {
+            if (buildup$effects.isEmpty()) buildup$effects = new Object2IntOpenHashMap<>();
+            buildup$effects.put(null, attackConfig.main());
+            for (Reference2IntMap.Entry<BuildupEffect> entry : attackConfig.extras().reference2IntEntrySet()) {
+                buildup$effects.put(entry.getKey(), buildup$effects.getInt(entry.getKey()) + entry.getIntValue());
+            }
+        });
+        int bonusBuildup = EnchantmentHelper.getEnchantmentLevel(BuildupEnchantments.BUILDUP_OFFENSE, mainhand) * 100;
+        buildup$effects.put(null, buildup$effects.getInt(null) + bonusBuildup);
     }
 
+    /**
+     * null key contains global buildup
+     */
     @Override
     public Object2IntMap<BuildupEffect> buildup$getEffectStacks() {
-        return null;
+        return buildup$effects;
     }
 }

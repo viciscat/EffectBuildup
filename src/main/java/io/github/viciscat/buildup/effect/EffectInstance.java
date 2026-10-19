@@ -33,6 +33,7 @@ public class EffectInstance implements INBTSerializable<NBTTagCompound> {
     public void deserializeNBT(NBTTagCompound nbt) {
         stackDurationStrategy.deserializeNBT(nbt.getCompoundTag("duration"));
         procDamage = nbt.getFloat("procDamage");
+        shouldSync = true;
     }
 
     public void proc(EntityLivingBase target, int procDamage, @Nullable DamageSource source) {
@@ -40,6 +41,8 @@ public class EffectInstance implements INBTSerializable<NBTTagCompound> {
         stackDurationStrategy.stack();
         shouldSync = true;
     }
+
+    public void clientProc(EntityLivingBase target) {}
 
     public void end(EntityLivingBase target) {
         shouldSync = true;
@@ -50,7 +53,9 @@ public class EffectInstance implements INBTSerializable<NBTTagCompound> {
     }
 
     public boolean shouldSync() {
-        return shouldSync;
+        boolean b = shouldSync;
+        shouldSync = false;
+        return b;
     }
 
     public int getStacks() {
@@ -58,7 +63,7 @@ public class EffectInstance implements INBTSerializable<NBTTagCompound> {
     }
 
     public int getDuration() {
-        return stackDurationStrategy.getDuration();
+        return getStacks() == 0 ? 0 : stackDurationStrategy.getDuration();
     }
 
     public void tick(EntityLivingBase target) {
@@ -72,17 +77,19 @@ public class EffectInstance implements INBTSerializable<NBTTagCompound> {
         }
     }
 
+    public void clientTick(EntityLivingBase target) {}
+
     protected void onStackChange(EntityLivingBase target) {}
 
     public void read(PacketBuffer buf) {
-        buf.writeCompoundTag(stackDurationStrategy.serializeNBT());
-    }
-    public void write(PacketBuffer buf) {
         try {
             stackDurationStrategy.deserializeNBT(buf.readCompoundTag());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void write(PacketBuffer buf) {
+        buf.writeCompoundTag(stackDurationStrategy.serializeNBT());
     }
 
     protected static void applyModifier(EntityLivingBase target, IAttribute attribute, AttributeModifier modifier) {

@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "ddd_buildup_effect:items/upgrade/judgement"
-  }
-}

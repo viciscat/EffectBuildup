@@ -23,11 +23,12 @@ public class StunningEffect extends EffectInstance {
     }
 
     @Override
-    public void tick(EntityLivingBase target) {
-        super.tick(target);
-        if (target instanceof EntityLiving living && !living.world.isRemote) {
-            if (stunTime > 0) {
-                stunTime--;
+    public void tick(EntityLivingBase base) {
+        super.tick(base);
+        if (base.world.isRemote) return;
+        if (stunTime > 0) {
+            stunTime--;
+            if (base instanceof EntityLiving living) {
                 if (stunTime <= 0) {
                     living.tasks.removeTask(AIStun.INSTANCE);
                 } else {
@@ -35,11 +36,11 @@ public class StunningEffect extends EffectInstance {
                     living.tasks.addTask(-1, AIStun.INSTANCE);
                 }
             }
-            boolean prevShouldStun = shouldStun;
-            shouldStun = stunTime > 0;
-            if (shouldStun != prevShouldStun) {
-                shouldSync = true;
-            }
+        }
+        boolean prevShouldStun = shouldStun;
+        shouldStun = stunTime > 0;
+        if (shouldStun != prevShouldStun) {
+            shouldSync = true;
         }
     }
 
@@ -108,25 +109,6 @@ public class StunningEffect extends EffectInstance {
                 input.moveForward = 0f;
                 input.jump = false;
                 input.sneak = false;
-            }
-        }
-
-        @SubscribeEvent
-        public void cancelMouseMovementIfStunned(MouseEvent event) {
-            EffectTracker tracker = EffectTracker.get(Minecraft.getMinecraft().player);
-            if (tracker == null) return;
-            if (tracker.getInstance(effect).filter(StunningEffect::shouldBeStunned).isPresent()) {
-                Minecraft.getMinecraft().mouseHelper.deltaX = Minecraft.getMinecraft().mouseHelper.deltaY = 0;
-            }
-        }
-
-        @SubscribeEvent
-        public void cancelMouseClickIfStunned(InputEvent.MouseInputEvent event) {
-            EffectTracker tracker = EffectTracker.get(Minecraft.getMinecraft().player);
-            if (tracker == null) return;
-            if (tracker.getInstance(effect).filter(StunningEffect::shouldBeStunned).isPresent()) {
-                KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindAttack.getKeyCode(), false);
-                KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindUseItem.getKeyCode(), false);
             }
         }
 
