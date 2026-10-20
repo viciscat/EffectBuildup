@@ -16,7 +16,6 @@ import java.util.UUID;
 
 public class MeltEffect extends EffectInstance {
     public static final TextureAtlasSprite PARTICLE = BuildupParticleManager.createSprite("melt", 176, 64, 12, 12);
-    private int ticks = 0;
     private static final UUID MODIFIER_UUID = UUID.fromString("33fad0d8-3802-4d5a-81eb-9a2383cd8ba3");
     private static final String[] ATTRIBUTES_TO_REDUCE  = new String[]{
             "generic.armor",
@@ -70,16 +69,6 @@ public class MeltEffect extends EffectInstance {
     protected void onStackChange(EntityLivingBase target) {
         super.onStackChange(target);
         applyModifiers(target);
-    }
-
-    @Override
-    public void tick(EntityLivingBase target) {
-        super.tick(target);
-        ticks++;
-        if (ticks % 20 == 0) {
-            int clamp = Math.clamp(getStacks() - 10, 0, 5);
-            if (clamp != 0) target.attackEntityFrom(new DamageSource("fx_acid"), procDamage * (clamp * 0.05f));
-        }
     }
 
     public float getResistanceMultiplier() {
