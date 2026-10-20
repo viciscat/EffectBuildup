@@ -42,19 +42,23 @@ public class GenericProjectileMixin implements ExtendedProjectile {
         for (BuildupGunUpgrades.Upgrade upgrade : BuildupGunUpgrades.getUpgrades()) {
             int stack = gun.getUpgradeStack(upgrade.gunUpgrade());
             if (stack > 0) {
-                if (buildup$effects.isEmpty()) buildup$effects = new Object2IntOpenHashMap<>();
-                buildup$effects.put(upgrade.effect(), stack * 4);
+                buildup$addToEffect(upgrade.effect(), stack * 4);
             }
         }
         BuildupConfig.get().itemAttack().get(mainhand.getItem()).ifPresent(attackConfig -> {
-            if (buildup$effects.isEmpty()) buildup$effects = new Object2IntOpenHashMap<>();
-            buildup$effects.put(null, attackConfig.main());
+            buildup$addToEffect(null, attackConfig.main());
             for (Reference2IntMap.Entry<BuildupEffect> entry : attackConfig.extras().reference2IntEntrySet()) {
-                buildup$effects.put(entry.getKey(), buildup$effects.getInt(entry.getKey()) + entry.getIntValue());
+                buildup$addToEffect(entry.getKey(), entry.getIntValue());
             }
         });
         int bonusBuildup = EnchantmentHelper.getEnchantmentLevel(BuildupEnchantments.BUILDUP_OFFENSE, mainhand) * 100;
-        buildup$effects.put(null, buildup$effects.getInt(null) + bonusBuildup);
+        buildup$addToEffect(null, bonusBuildup);
+    }
+
+    @Unique
+    private void buildup$addToEffect(BuildupEffect effect, int amount) {
+        if (buildup$effects.isEmpty()) buildup$effects = new Object2IntOpenHashMap<>();
+        buildup$effects.put(effect, amount + buildup$effects.getInt(effect));
     }
 
     /**
