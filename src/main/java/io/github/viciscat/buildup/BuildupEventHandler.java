@@ -122,7 +122,6 @@ public class BuildupEventHandler {
                     .flatMap(dist -> BuildupConfig.get().itemAttack().get(mainhand.getItem()).map(c -> new DistConf(dist, c)))
                     .ifPresent(applyDamageDistribution);
             ignoreImmunities |= EnchantmentHelper.getMaxEnchantmentLevel(DDDEnchantments.slyStrike, base) > 0;
-            ignoreImmunities |= EnchantmentHelper.getMaxEnchantmentLevel(DDDEnchantments.slyStrike, base) > 0;
             int bonusBuildup = EnchantmentHelper.getMaxEnchantmentLevel(BuildupEnchantments.BUILDUP_OFFENSE, base) * 100 +
                     BuildupTinkerModifiers.getCurrent(mainhand, BuildupTinkerModifiers.BUILDUP_OFFENSE);
             if (bonusBuildup > 0) {
@@ -172,8 +171,9 @@ public class BuildupEventHandler {
             distribution
                     .flatMap(dist -> BuildupConfig.get().entityAttack().get((Entity) projectile).map(c -> new DistConf(dist, c)))
                     .ifPresent(applyDamageDistribution);
-            ignoreImmunities = source.getTrueSource() instanceof EntityLivingBase base && EnchantmentHelper.getMaxEnchantmentLevel(DDDEnchantments.slyStrike, base) > 0;
+            ignoreImmunities |= source.getTrueSource() instanceof EntityLivingBase base && EnchantmentHelper.getMaxEnchantmentLevel(DDDEnchantments.slyStrike, base) > 0;
             if (source.getImmediateSource() instanceof ExtendedProjectile extendedProjectile) {
+                ignoreImmunities |= extendedProjectile.buildup$hasImmunityBreaker();
                 for (Object2IntMap.Entry<BuildupEffect> entry : extendedProjectile.buildup$getEffectStacks().object2IntEntrySet()) {
                     if (entry.getKey() == null)
                         distribution.ifPresent(dist -> dist.distributeDamage(entry.getIntValue()).forEach(addType));

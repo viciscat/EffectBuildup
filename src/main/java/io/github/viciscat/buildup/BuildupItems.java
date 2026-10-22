@@ -24,6 +24,7 @@ public class BuildupItems {
     public static ItemAffinityDust[] dusts = new ItemAffinityDust[0];
     public static final Map<BuildupEffect, ItemAffinityDust> effectToDust = new Reference2ObjectOpenHashMap<>();
     public static Item catalyst = new Item();
+    public static ItemGunUpgrade immunityBreakerUpgrade = null;
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
@@ -33,6 +34,9 @@ public class BuildupItems {
             gunUpgrade.setCreativeTab(CreativeTabs.COMBAT);
             registry.register(gunUpgrade.setTranslationKey(PREFIX + gunUpgrade.getRegistryName().getPath()));
         }
+        immunityBreakerUpgrade = new ItemGunUpgrade(BuildupGunUpgrades.IMMUNITY_BREAKER);
+        immunityBreakerUpgrade.setCreativeTab(CreativeTabs.COMBAT);
+        registry.register(immunityBreakerUpgrade.setTranslationKey(PREFIX + immunityBreakerUpgrade.getRegistryName().getPath()));
         List<ItemAffinityDust> items = new ArrayList<>();
         Effects.forEach(effect -> {
             ItemAffinityDust item = new ItemAffinityDust(effect);

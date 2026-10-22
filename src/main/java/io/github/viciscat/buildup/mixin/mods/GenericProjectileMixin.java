@@ -32,6 +32,9 @@ public class GenericProjectileMixin implements ExtendedProjectile {
     @Unique
     private Object2IntMap<BuildupEffect> buildup$effects = Object2IntMaps.emptyMap();
 
+    @Unique
+    private boolean buildup$hasImmunityBreaker = false;
+
     @Inject(method = "initProjectile", at = @At("TAIL"))
     private void onInitProjectile(World worldIn, double posX, double posY, double posZ, float yaw, float pitch, float damage, float speed, int TTL, float spread, float dmgDropStart, float dmgDropEnd, float dmgMin, float penetration, boolean blockdamage, EnumBulletFirePos firePos, CallbackInfo ci) {
         if (this.shooter == null) return;
@@ -46,6 +49,7 @@ public class GenericProjectileMixin implements ExtendedProjectile {
                 buildup$addToEffect(upgrade.effect(), stack * 4);
             }
         }
+        buildup$hasImmunityBreaker = gun.getUpgradeStack(BuildupGunUpgrades.IMMUNITY_BREAKER) > 0;
         BuildupConfig.get().itemAttack().get(mainhand.getItem()).ifPresent(attackConfig -> {
             buildup$addToEffect(null, attackConfig.main());
             for (Reference2IntMap.Entry<BuildupEffect> entry : attackConfig.extras().reference2IntEntrySet()) {
@@ -68,5 +72,10 @@ public class GenericProjectileMixin implements ExtendedProjectile {
     @Override
     public Object2IntMap<BuildupEffect> buildup$getEffectStacks() {
         return buildup$effects;
+    }
+
+    @Override
+    public boolean buildup$hasImmunityBreaker() {
+        return buildup$hasImmunityBreaker;
     }
 }

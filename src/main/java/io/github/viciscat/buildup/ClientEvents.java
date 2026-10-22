@@ -44,8 +44,10 @@ public class ClientEvents {
             ResourceLocation location = new ResourceLocation(dust.getRegistryName().getNamespace(), "dust/" + dust.effect.getId());
             ModelLoader.setCustomModelResourceLocation(dust, 0, new ModelResourceLocation(location, "inventory"));
         }
-        ResourceLocation location = new ResourceLocation(BuildupItems.catalyst.getRegistryName().getNamespace(), "dust/" + BuildupItems.catalyst.getRegistryName().getPath());
-        ModelLoader.setCustomModelResourceLocation(BuildupItems.catalyst, 0, new ModelResourceLocation(location, "inventory"));
+        ResourceLocation catalystLoc = new ResourceLocation(BuildupItems.catalyst.getRegistryName().getNamespace(), "dust/" + BuildupItems.catalyst.getRegistryName().getPath());
+        ModelLoader.setCustomModelResourceLocation(BuildupItems.catalyst, 0, new ModelResourceLocation(catalystLoc, "inventory"));
+        ResourceLocation immunityBreakerLoc = new ResourceLocation(BuildupItems.immunityBreakerUpgrade.gunUpgrade.id().getNamespace(), "upgrade/" + BuildupItems.immunityBreakerUpgrade.gunUpgrade.id().getPath());
+        ModelLoader.setCustomModelResourceLocation(BuildupItems.immunityBreakerUpgrade, 0, new ModelResourceLocation(immunityBreakerLoc, "inventory"));
     }
 
     @SubscribeEvent

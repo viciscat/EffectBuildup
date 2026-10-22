@@ -15,6 +15,7 @@ item.ddd_effect_buildup.decayed_affinity_gun_upgrade.name=Gun Upgrade: Decayed A
 item.ddd_effect_buildup.judgement_affinity_gun_upgrade.name=Gun Upgrade: Judgement Affinity
 item.ddd_effect_buildup.unstable_affinity_gun_upgrade.name=Gun Upgrade: Unstable Affinity
 item.ddd_effect_buildup.destined_death_affinity_gun_upgrade.name=Gun Upgrade: Destined Death Affinity
+item.ddd_effect_buildup.immunity_breaker_gun_upgrade.name=Gun Upgrade: Immunity Breaker
 
 item.ddd_effect_buildup.bleed_out_affinity_dust.name=Bleed Out Affinity Dust
 item.ddd_effect_buildup.megabonk_affinity_dust.name=Megabonk Affinity Dust

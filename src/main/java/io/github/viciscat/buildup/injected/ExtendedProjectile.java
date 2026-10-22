@@ -5,4 +5,5 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
 public interface ExtendedProjectile {
     Object2IntMap<BuildupEffect> buildup$getEffectStacks();
+    boolean buildup$hasImmunityBreaker();
 }

@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 
 public class BuildupGunUpgrades {
     static final List<Upgrade> UPGRADES = new ArrayList<>();
+    public static final GunUpgrade IMMUNITY_BREAKER = GunUpgrades.register(BuildupMod.loc("immunity_breaker"), 1);
 
     public static void init() {
         Effects.forEach((effect) -> UPGRADES.add(new Upgrade(GunUpgrades.register(new ResourceLocation(Tags.MOD_ID, effect.getId() + "_affinity")), effect)));
