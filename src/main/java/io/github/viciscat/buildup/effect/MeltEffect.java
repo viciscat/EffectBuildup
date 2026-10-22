@@ -71,6 +71,15 @@ public class MeltEffect extends EffectInstance {
         applyModifiers(target);
     }
 
+    @Override
+    public void end(EntityLivingBase target) {
+        super.end(target);
+        Arrays.stream(ATTRIBUTES_TO_REDUCE)
+                .map(attr -> target.getAttributeMap().getAttributeInstanceByName(attr))
+                .filter(Objects::nonNull)
+                .forEach(instance -> instance.removeModifier(MODIFIER_UUID));
+    }
+
     public float getResistanceMultiplier() {
         float multiplier = 1f;
         int stacks = getStacks();
