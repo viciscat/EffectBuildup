@@ -34,6 +34,7 @@ public class GenericProjectileMixin implements ExtendedProjectile {
 
     @Inject(method = "initProjectile", at = @At("TAIL"))
     private void onInitProjectile(World worldIn, double posX, double posY, double posZ, float yaw, float pitch, float damage, float speed, int TTL, float spread, float dmgDropStart, float dmgDropEnd, float dmgMin, float penetration, boolean blockdamage, EnumBulletFirePos firePos, CallbackInfo ci) {
+        if (this.shooter == null) return;
         ItemStack mainhand = this.shooter.getHeldItemMainhand();
         UpgradableGun gun = UpgradableGun.get(mainhand);
         if (gun == null) {
