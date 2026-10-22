@@ -84,15 +84,17 @@ public class BuildupEventHandler {
         if (skillDamageEvent != null) {
             Skill skill = skillDamageEvent.getSkill();
             DSLConfig config = EnderSkillsAPI.SKILL_DSL_CONFIG_MAP.get(skill.getRegistryName());
-            Capabilities.get(source.getTrueSource()).flatMap(skills -> skills.getOwned(skill)).ifPresent(skillInfo -> {
-                final int level = skillInfo instanceof InfoUpgradeable upgradeable ? upgradeable.getLevel() : 0;
-                config.map.keySet().stream().filter(s -> s.startsWith("BUILDUP:")).forEach(id -> {
-                    BuildupEffect effect = Effects.get(id.split(":", 2)[1].trim());
-                    if (effect == null) return;
-                    float v = DSLEvaluator.evaluateFloat(skill, id, level, 1);
-                    addEffect.accept(effect, v);
-                });
-            });
+            Capabilities.get(source.getTrueSource())
+                    .flatMap(skills -> skills.getOwned(skill).or(() -> skills.getActive(skill).map(holder -> holder.data.skill).flatMap(skills::getOwned)))
+                    .ifPresent(skillInfo -> {
+                        final int level = skillInfo instanceof InfoUpgradeable upgradeable ? upgradeable.getLevel() : 0;
+                        config.map.keySet().stream().filter(s -> s.startsWith("BUILDUP:")).forEach(id -> {
+                            BuildupEffect effect = Effects.get(id.split(":", 2)[1].trim());
+                            if (effect == null) return;
+                            float v = DSLEvaluator.evaluateFloat(skill, id, level, 1);
+                            addEffect.accept(effect, v);
+                        });
+                    });
 
             DDDMaps.DamageMap damage = DDDAPI.accessor.getDDDCombatTracker(event.getEntityLiving())
                     .flatMap(t -> t.getLastCalculation(20))
@@ -102,7 +104,8 @@ public class BuildupEventHandler {
             return;
         }
 
-        record DistConf(IDamageDistribution dist, AttackConfig attack) { }
+        record DistConf(IDamageDistribution dist, AttackConfig attack) {
+        }
         Consumer<DistConf> applyDamageDistribution = distConf -> {
             DDDMaps.DamageMap damageMap = distConf.dist().distributeDamage(distConf.attack().main());
             damageMap.forEach(addType);
@@ -171,7 +174,8 @@ public class BuildupEventHandler {
             ignoreImmunities = source.getTrueSource() instanceof EntityLivingBase base && EnchantmentHelper.getMaxEnchantmentLevel(DDDEnchantments.slyStrike, base) > 0;
             if (source.getImmediateSource() instanceof ExtendedProjectile extendedProjectile) {
                 for (Object2IntMap.Entry<BuildupEffect> entry : extendedProjectile.buildup$getEffectStacks().object2IntEntrySet()) {
-                    if (entry.getKey() == null) distribution.ifPresent(dist -> dist.distributeDamage(entry.getIntValue()).forEach(addType));
+                    if (entry.getKey() == null)
+                        distribution.ifPresent(dist -> dist.distributeDamage(entry.getIntValue()).forEach(addType));
                     else addEffect.accept(entry.getKey(), (float) entry.getIntValue());
                 }
             }
