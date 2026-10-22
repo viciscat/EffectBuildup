@@ -1,6 +1,7 @@
 package io.github.viciscat.buildup.effect;
 
 import arekkuusu.enderskills.common.skill.ability.mobility.wind.Hasten;
+import com.tmtravlr.potioncore.PotionCoreAttributes;
 import io.github.viciscat.buildup.BuildupSounds;
 import io.github.viciscat.buildup.particle.BasicParticle;
 import io.github.viciscat.buildup.particle.BuildupParticleManager;
@@ -25,18 +26,19 @@ public class FrozenEffect extends StunningEffect {
     private int stacksPastEight = 0;
 
     public FrozenEffect() {
-        super(new StackDurationStrategy.DecayingStackStrategy(30 * 20));
+        super(new StackDurationStrategy.RefreshStrategy(30 * 20));
     }
 
     @Override
     public void proc(EntityLivingBase target, int procDamage, DamageSource source) {
         super.proc(target, procDamage, source);
         applyModifier(target);
-        stunTime = 6;
+        setStunTime(6, target);
         if (getStacks() > 8) {
             stacksPastEight++;
             if (stacksPastEight >= 12) {
-                stunTime = 4 * 20;
+                stacksPastEight = 0;
+                setStunTime(4 * 20, target);
                 BuildupSounds.playAt(target, BuildupSounds.FROZEN_20_PROC, 1, 1);
                 return;
             }
@@ -83,7 +85,12 @@ public class FrozenEffect extends StunningEffect {
         applyModifier(
                 target,
                 SharedMonsterAttributes.MOVEMENT_SPEED,
-                new AttributeModifier(MODIFIER_UUID, "Frozen Effect", -reduction, Constants.AttributeModifierOperation.MULTIPLY)
+                new AttributeModifier(MODIFIER_UUID, "Frozen Effect", -Math.min(reduction, 0.8f), Constants.AttributeModifierOperation.MULTIPLY)
+        );
+        applyModifier(
+                target,
+                PotionCoreAttributes.JUMP_HEIGHT,
+                new AttributeModifier(MODIFIER_UUID, "Frozen Effect", -Math.min(reduction, 0.8f), Constants.AttributeModifierOperation.MULTIPLY)
         );
         if (target.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED) != null)
             applyModifier(
@@ -132,6 +139,7 @@ public class FrozenEffect extends StunningEffect {
     public void end(EntityLivingBase target) {
         super.end(target);
         target.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MODIFIER_UUID);
+        target.getEntityAttribute(PotionCoreAttributes.JUMP_HEIGHT).removeModifier(MODIFIER_UUID);
         if (target.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED) != null) target.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(MODIFIER_UUID);
         target.getEntityAttribute(Hasten.HASTEN).removeModifier(MODIFIER_UUID);
     }

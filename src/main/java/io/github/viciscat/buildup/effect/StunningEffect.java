@@ -1,6 +1,7 @@
 package io.github.viciscat.buildup.effect;
 
 import io.github.viciscat.buildup.capabilities.EffectTracker;
+import io.github.viciscat.buildup.capabilities.StunTracker;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -10,8 +11,11 @@ import net.minecraft.util.MovementInput;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nullable;
+import java.util.Optional;
+
 public class StunningEffect extends EffectInstance {
-    protected int stunTime;
+    private int stunTime;
     private boolean shouldStun;
 
     protected StunningEffect(StackDurationStrategy stackDurationStrategy) {
@@ -67,6 +71,13 @@ public class StunningEffect extends EffectInstance {
     public void write(PacketBuffer buf) {
         super.write(buf);
         buf.writeBoolean(shouldStun);
+    }
+
+    protected void setStunTime(int stunTime, @Nullable EntityLivingBase entity) {
+        this.stunTime += Optional.ofNullable(entity)
+                .flatMap(StunTracker::getOptional)
+                .map(tracker -> Math.round(tracker.tryStun(stunTime) * stunTime))
+                .orElse(stunTime);
     }
 
     // Thank you ender skills, cleaner than cancelling the update method in a mixin imo :p

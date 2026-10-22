@@ -23,11 +23,13 @@
     "GenericGunMixin",
     "GenericProjectileMixin",
     "GuiHandlerMixin",
+    "MBEntityAIAttackMeleeMixin",
     "ModResistantTypeMixin",
     "ParasitePlayerMixin",
     "PartMaterialTypeAccessor",
     "SeaSerpentAIAttackMeleeMixin",
-    "SRPEventHandlerBusMixin"
+    "SRPEventHandlerBusMixin",
+    "StunnedMixin"
   ],
   "server": [],
   "client": [

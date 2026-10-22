@@ -20,7 +20,7 @@ import java.util.Optional;
 public class JudgementEffect extends EffectInstance {
     public static final TextureAtlasSprite PARTICLE = BuildupParticleManager.createSprite("judgement", 128, 64, 12, 12);
     public JudgementEffect() {
-        super(new StackDurationStrategy.DecayingStackStrategy(60 * 20));
+        super(new StackDurationStrategy.RefreshStrategy(60 * 20));
     }
 
     @Override

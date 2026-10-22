@@ -121,7 +121,8 @@ public class BuildupEventHandler {
             DDDAPI.accessor.getDamageDistribution(mainhand)
                     .flatMap(dist -> BuildupConfig.get().itemAttack().get(mainhand.getItem()).map(c -> new DistConf(dist, c)))
                     .ifPresent(applyDamageDistribution);
-            ignoreImmunities = EnchantmentHelper.getMaxEnchantmentLevel(DDDEnchantments.slyStrike, base) > 0;
+            ignoreImmunities |= EnchantmentHelper.getMaxEnchantmentLevel(DDDEnchantments.slyStrike, base) > 0;
+            ignoreImmunities |= EnchantmentHelper.getMaxEnchantmentLevel(DDDEnchantments.slyStrike, base) > 0;
             int bonusBuildup = EnchantmentHelper.getMaxEnchantmentLevel(BuildupEnchantments.BUILDUP_OFFENSE, base) * 100 +
                     BuildupTinkerModifiers.getCurrent(mainhand, BuildupTinkerModifiers.BUILDUP_OFFENSE);
             if (bonusBuildup > 0) {

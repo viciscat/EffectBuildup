@@ -55,6 +55,8 @@ dependencies {
     implementation rfg.deobf("curse.maven:cotesia-971348:6327376")
     implementation rfg.deobf("curse.maven:hbm-nuclear-tech-mod-community-edition-1312314:8174803")
     implementation rfg.deobf("curse.maven:ice-and-fire-264231:2939529")
+    implementation rfg.deobf("curse.maven:mutant-beasts-336272:3225395")
+    implementation rfg.deobf("curse.maven:potion_core_19-242872:2905184-sources-2905187")
 
     // kus tweaks transitive stuff
     runtimeOnly rfg.deobf("curse.maven:baubles-227083:2518667")
@@ -64,7 +66,6 @@ dependencies {
     runtimeOnly rfg.deobf("curse.maven:extrautils2-225561:2678374")
     runtimeOnly rfg.deobf("slimeknights.mantle:Mantle:1.12-1.3.3.56")
     runtimeOnly rfg.deobf("slimeknights:TConstruct:1.12.2-2.13.0.190")
-    runtimeOnly rfg.deobf("curse.maven:potion_core_19-242872:2905184-sources-2905187")
     runtimeOnly rfg.deobf("curse.maven:wizardry-265642:5354477")
     runtimeOnly rfg.deobf("curse.maven:rough_mobs_2-295807:2706899")
     runtimeOnly rfg.deobf("curse.maven:actually_additions-228404:3117927")
