@@ -80,6 +80,7 @@ public class StunTrackerImpl implements StunTracker, ICapabilitySerializable<NBT
         NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger("stage", stage);
         tag.setInteger("timer", timer);
+        tag.setInteger("referenceTicksExisted", entity.ticksExisted);
         NBTTagList list = new NBTTagList();
         for (StunPeriod period : stunPeriods) {
             list.appendTag(period.toNBT());
@@ -93,9 +94,10 @@ public class StunTrackerImpl implements StunTracker, ICapabilitySerializable<NBT
         stunPeriods.clear();
         stage = nbt.getInteger("stage");
         timer = nbt.getInteger("timer");
+        int referenceTicksExisted = nbt.getInteger("referenceTicksExisted");
         NBTTagList list = nbt.getTagList("stunPeriods", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < list.tagCount(); i++) {
-            stunPeriods.add(StunPeriod.fromNBT(list.getCompoundTagAt(i)));
+            stunPeriods.add(StunPeriod.fromNBT(list.getCompoundTagAt(i), entity.ticksExisted - referenceTicksExisted));
         }
     }
 
@@ -123,7 +125,7 @@ public class StunTrackerImpl implements StunTracker, ICapabilitySerializable<NBT
             return tag;
         }
 
-        public static StunPeriod fromNBT(NBTTagCompound tag) {
+        public static StunPeriod fromNBT(NBTTagCompound tag, int offset) {
             return new StunPeriod(tag.getInteger("start"), tag.getInteger("duration"));
         }
     }
