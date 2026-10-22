@@ -88,6 +88,7 @@ public class EffectInstance implements INBTSerializable<NBTTagCompound> {
             throw new RuntimeException(e);
         }
     }
+
     public void write(PacketBuffer buf) {
         buf.writeCompoundTag(stackDurationStrategy.serializeNBT());
     }

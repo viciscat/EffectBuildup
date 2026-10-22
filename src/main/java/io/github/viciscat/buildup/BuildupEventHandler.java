@@ -5,14 +5,17 @@ import arekkuusu.enderskills.api.capability.Capabilities;
 import arekkuusu.enderskills.api.capability.data.InfoUpgradeable;
 import arekkuusu.enderskills.api.configuration.DSLConfig;
 import arekkuusu.enderskills.api.configuration.DSLEvaluator;
+import arekkuusu.enderskills.api.event.SkillActionableEvent;
 import arekkuusu.enderskills.api.event.SkillDamageEvent;
 import arekkuusu.enderskills.api.registry.Skill;
 import io.github.viciscat.buildup.capabilities.BuildupTracker;
+import io.github.viciscat.buildup.capabilities.EffectTracker;
 import io.github.viciscat.buildup.config.AttackConfig;
 import io.github.viciscat.buildup.config.BuildupConfig;
 import io.github.viciscat.buildup.ddd_effect_buildup.Tags;
 import io.github.viciscat.buildup.effect.BuildupEffect;
 import io.github.viciscat.buildup.effect.Effects;
+import io.github.viciscat.buildup.effect.StunningEffect;
 import io.github.viciscat.buildup.enchantment.BuildupEnchantments;
 import io.github.viciscat.buildup.injected.ExtendedProjectile;
 import io.github.viciscat.buildup.mixin.mods.PartMaterialTypeAccessor;
@@ -52,7 +55,16 @@ public class BuildupEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onSkillDamage(SkillDamageEvent event) {
+        //System.out.println("Skill damage event: " + event.getSkill() + " " + event.getAmount() + " " + event.getSource());
         if (event.getAmount() > 0) SOURCE_TO_EVENT.put(event.getSource(), event);
+    }
+
+    @SubscribeEvent
+    public static void onSkillActivate(SkillActionableEvent event) {
+        EffectTracker.getOptional(event.getEntityLiving())
+                .flatMap(tracker -> tracker.getInstance(Effects.FROZEN))
+                .filter(StunningEffect::shouldBeStunned)
+                .ifPresent(_ -> event.setCanceled(true));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)

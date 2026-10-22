@@ -54,6 +54,7 @@ dependencies {
     implementation rfg.deobf(files("libs/SRParasites-1.12.2v1.9.21.jar"))
     implementation rfg.deobf("curse.maven:cotesia-971348:6327376")
     implementation rfg.deobf("curse.maven:hbm-nuclear-tech-mod-community-edition-1312314:8174803")
+    implementation rfg.deobf("curse.maven:ice-and-fire-264231:2939529")
 
     // kus tweaks transitive stuff
     runtimeOnly rfg.deobf("curse.maven:baubles-227083:2518667")
@@ -74,8 +75,10 @@ dependencies {
     runtimeOnly rfg.deobf("curse.maven:dynamic_trees-252818:3812473-deobf-3812474-sources-3812476")
     runtimeOnly rfg.deobf("curse.maven:open_modular_turrets-224663:3466431")
     runtimeOnly rfg.deobf("curse.maven:om_lib-254334:3466259")
+    runtimeOnly rfg.deobf("curse.maven:llibrary-243298:3116493")
 
     runtimeOnly rfg.deobf(files("libs/mcheli-1.1.4.jar"))
+    runtimeOnly rfg.deobf(files("libs/llibrary-core-1.0.11-1.12.2.jar"))
     runtimeOnly rfg.deobf(files("libs/wither-1.0.1.jar"))
 
     // Example - Dependency descriptor:

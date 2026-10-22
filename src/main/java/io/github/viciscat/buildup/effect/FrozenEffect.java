@@ -1,5 +1,6 @@
 package io.github.viciscat.buildup.effect;
 
+import arekkuusu.enderskills.common.skill.ability.mobility.wind.Hasten;
 import io.github.viciscat.buildup.BuildupSounds;
 import io.github.viciscat.buildup.particle.BasicParticle;
 import io.github.viciscat.buildup.particle.BuildupParticleManager;
@@ -7,6 +8,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,6 +22,7 @@ public class FrozenEffect extends StunningEffect {
     static {
         MinecraftForge.EVENT_BUS.register(new EventHandler(Effects.FROZEN));
     }
+    private int stacksPastEight = 0;
 
     public FrozenEffect() {
         super(new StackDurationStrategy.DecayingStackStrategy(30 * 20));
@@ -30,13 +33,16 @@ public class FrozenEffect extends StunningEffect {
         super.proc(target, procDamage, source);
         applyModifier(target);
         stunTime = 6;
-        if (getStacks() >= 20) {
-            stackDurationStrategy.setStacks(8);
-            stunTime = 4 * 20;
-            BuildupSounds.playAt(target, BuildupSounds.FROZEN_20_PROC, 1, 1);
-        } else {
-            BuildupSounds.playAt(target, BuildupSounds.FROZEN_PROC, 1, 1);
+        if (getStacks() > 8) {
+            stacksPastEight++;
+            if (stacksPastEight >= 12) {
+                stunTime = 4 * 20;
+                BuildupSounds.playAt(target, BuildupSounds.FROZEN_20_PROC, 1, 1);
+                return;
+            }
         }
+        BuildupSounds.playAt(target, BuildupSounds.FROZEN_PROC, 1, 1);
+
     }
 
     @Override
@@ -73,22 +79,60 @@ public class FrozenEffect extends StunningEffect {
     }
 
     private void applyModifier(EntityLivingBase target) {
-        float reduction = Math.min(8, getStacks()) * 0.1f;
+        float reduction = getReduction();
         applyModifier(
                 target,
                 SharedMonsterAttributes.MOVEMENT_SPEED,
                 new AttributeModifier(MODIFIER_UUID, "Frozen Effect", -reduction, Constants.AttributeModifierOperation.MULTIPLY)
         );
+        if (target.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED) != null)
+            applyModifier(
+                    target,
+                    SharedMonsterAttributes.ATTACK_SPEED,
+                    new AttributeModifier(MODIFIER_UUID, "Frozen Effect", -reduction, Constants.AttributeModifierOperation.MULTIPLY)
+        );
+        applyModifier(
+                target,
+                Hasten.HASTEN,
+                new AttributeModifier(MODIFIER_UUID, "Frozen Effect", -reduction, Constants.AttributeModifierOperation.ADD)
+        );
+    }
+
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound compound = super.serializeNBT();
+        compound.setInteger("stacksPastEight", stacksPastEight);
+        return compound;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound compound) {
+        super.deserializeNBT(compound);
+        stacksPastEight = compound.getInteger("stacksPastEight");
+    }
+
+    public float getReduction() {
+        float reduction = 0f;
+        int stacks = getStacks();
+        reduction += Math.clamp(stacks, 0, 8) * 0.1f;
+        stacks -= 8;
+        reduction += Math.clamp(stacks, 0, 7) * 0.05f;
+        stacks -= 7;
+        reduction += Math.max(stacks, 0) * 0.02f;
+        return reduction;
     }
 
     @Override
     protected void onStackChange(EntityLivingBase target) {
         applyModifier(target);
+        if (getStacks() < 8) stacksPastEight = 0;
     }
 
     @Override
     public void end(EntityLivingBase target) {
         super.end(target);
         target.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MODIFIER_UUID);
+        if (target.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED) != null) target.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(MODIFIER_UUID);
+        target.getEntityAttribute(Hasten.HASTEN).removeModifier(MODIFIER_UUID);
     }
 }

@@ -7,16 +7,32 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AffixAdaptableMixin",
+    "CyclopsAIAttackMeleeMixin",
     "DamageResistanceHandlerMixin",
+    "EntityAIAttackMeleeNotGroundMixin",
+    "EntityAIAttackMeleeStatusAOEMixin",
+    "EntityAIAttackMeleeStatusMixin",
+    "EntityAIAttackProjectileMixin",
+    "EntityAIAttackRangedStatusMixin",
+    "EntityAIEvadeDashMixin",
+    "EntityAIEvadeMixin",
+    "EntityAIGiveEffectsAreaMixin",
+    "EntityAISkillMixin",
+    "EntityAIWaterLeapAtTargetStatusMixin",
+    "EntityAlafhaMixin",
+    "GenericGunMixin",
     "GenericProjectileMixin",
     "GuiHandlerMixin",
     "ModResistantTypeMixin",
     "ParasitePlayerMixin",
     "PartMaterialTypeAccessor",
+    "SeaSerpentAIAttackMeleeMixin",
     "SRPEventHandlerBusMixin"
   ],
   "server": [],
-  "client": [],
+  "client": [
+    "GuiSkillAdvancementSimpleMixin"
+  ],
   "mixinextras": {
     "minVersion": "0.5.0"
   }

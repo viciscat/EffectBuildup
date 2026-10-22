@@ -82,6 +82,11 @@ public class StunningEffect extends EffectInstance {
         public boolean isInterruptible() {
             return false;
         }
+
+        @Override
+        public int getMutexBits() {
+            return 16777215;
+        }
     }
 
     protected static final class EventHandler {
