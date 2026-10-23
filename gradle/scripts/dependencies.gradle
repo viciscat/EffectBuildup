@@ -48,7 +48,7 @@ dependencies {
     implementation rfg.deobf("slimeknights:TConstruct:1.12.2-2.13.0.190")
     implementation rfg.deobf('curse.maven:conarm-287683:3174535')
     implementation rfg.deobf("curse.maven:techguns-244201:2958103")
-    implementation rfg.deobf(files("libs/kus_tweaks-3.11.1.jar"))
+    implementation rfg.deobf(files("libs/kus_tweaks-3.11.2.jar"))
     implementation rfg.deobf(files("libs/EnderSkills-1.12.2-1.17.0.0.jar"))
     implementation rfg.deobf("curse.maven:champions-307152:3177947")
     implementation rfg.deobf(files("libs/SRParasites-1.12.2v1.9.21.jar"))

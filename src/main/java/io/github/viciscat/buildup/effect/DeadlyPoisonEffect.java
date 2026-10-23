@@ -11,7 +11,6 @@ import net.minecraft.util.math.Vec3d;
 
 public class DeadlyPoisonEffect extends EffectInstance {
     public static final TextureAtlasSprite PARTICLE = BuildupParticleManager.createSprite("deadly_poison", 140, 64, 12, 12);
-    private static final DamageSource DAMAGE_SOURCE = new DamageSource("fx_poison").setDamageBypassesArmor().setMagicDamage();
     private int ticks;
     private float previousProcDamage;
     public DeadlyPoisonEffect() {
@@ -30,7 +29,7 @@ public class DeadlyPoisonEffect extends EffectInstance {
         super.tick(target);
         ticks++;
         if (ticks <= 10 * 20 && ticks % 20 == 0) {
-            target.attackEntityFrom(DAMAGE_SOURCE, procDamage * 0.1f + previousProcDamage);
+            target.attackEntityFrom(dmgSrc("fx_poison").setDamageBypassesArmor().setMagicDamage(), procDamage * 0.1f + previousProcDamage);
         }
     }
 

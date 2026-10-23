@@ -1,6 +1,7 @@
 package io.github.viciscat.buildup.effect;
 
 import io.github.viciscat.buildup.BuildupSounds;
+import io.github.viciscat.buildup.EffectDamageSource;
 import io.github.viciscat.buildup.network.BuildupPacketHandler;
 import io.github.viciscat.buildup.network.S2CBleedOutSlash;
 import io.github.viciscat.buildup.particle.BasicParticle;
@@ -27,7 +28,7 @@ public class BleedOutEffect extends EffectInstance {
         if (activeFor % 20 == 0) {
             final int min = Math.min(5, getStacks());
             final float extra = min == 5 ? 0.45f : (min - 1) * 0.1f;
-            target.attackEntityFrom(new DamageSource("fx_slashing"), procDamage * (0.4f + extra));
+            target.attackEntityFrom(dmgSrc("fx_slashing"), procDamage * (0.4f + extra));
         }
     }
 

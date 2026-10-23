@@ -93,7 +93,7 @@ class BuildupTrackerImpl implements BuildupTracker, ICapabilitySerializable<NBTT
                     damage = procDamage.values().stream().mapToInt(Float::intValue).sum() / 2;
                 }
                 BuildupMod.LOGGER.info("Applying effect {} to '{}' ({}) with {} damage", effect.getId(), entity.getName(), entity.getEntityId(), damage);
-                effect.applyEffect(entity, damage, source);
+                effect.applyEffect(entity, damage, source, ignoreImmunities);
                 S2CBuildupProc message = new S2CBuildupProc(entity, effect);
                 BuildupPacketHandler.INSTANCE.sendToAllTracking(message, entity);
                 if (isPlayer) BuildupPacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) entity);

@@ -1,5 +1,6 @@
 package io.github.viciscat.buildup.effect;
 
+import io.github.viciscat.buildup.EffectDamageSource;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
@@ -16,6 +17,7 @@ public class EffectInstance implements INBTSerializable<NBTTagCompound> {
     protected final StackDurationStrategy stackDurationStrategy;
     protected float procDamage;
     protected boolean shouldSync;
+    public boolean ignoreImmunities;
 
     protected EffectInstance(StackDurationStrategy stackDurationStrategy) {
         this.stackDurationStrategy = stackDurationStrategy;
@@ -75,6 +77,12 @@ public class EffectInstance implements INBTSerializable<NBTTagCompound> {
                 onStackChange(target);
             }
         }
+    }
+
+    protected EffectDamageSource dmgSrc(String damageType) {
+        EffectDamageSource source = new EffectDamageSource(damageType.startsWith("fx_") ? damageType : ("fx_" + damageType));
+        source.ignoreImmunities = ignoreImmunities;
+        return source;
     }
 
     public void clientTick(EntityLivingBase target) {}

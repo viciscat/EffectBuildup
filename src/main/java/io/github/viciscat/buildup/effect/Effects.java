@@ -2,6 +2,7 @@ package io.github.viciscat.buildup.effect;
 
 import io.github.viciscat.buildup.BuildupSounds;
 import io.github.viciscat.buildup.EffectApplier;
+import io.github.viciscat.buildup.EffectDamageSource;
 import io.github.viciscat.buildup.effect.BuildupEffect.Display;
 import io.github.viciscat.buildup.particle.BasicParticle;
 import io.github.viciscat.buildup.particle.BuildupParticleManager;
@@ -49,9 +50,11 @@ public final class Effects {
 
     public static final InstancedEffect<MegabonkEffect> MEGABONK = registerInstanced("megabonk", new Display(11, 0xBDBBBB), DDDBuiltInDamageType.BLUDGEONING.getTypeName(), MegabonkEffect::new);
     public static final BuildupEffect WOUND = register("wound", new Display(14, 0x291601), DDDBuiltInDamageType.PIERCING.getTypeName(),
-            (target, procDamage, _) -> {
+            (target, procDamage, _, ignoreImmunities) -> {
                 BuildupSounds.playAt(target, BuildupSounds.WOUND_PROC, 1, 1);
-                target.attackEntityFrom(new DamageSource("fx_piercing"), procDamage * 9.25f);
+                EffectDamageSource fxPiercing = new EffectDamageSource("fx_piercing");
+                fxPiercing.ignoreImmunities = true;
+                target.attackEntityFrom(fxPiercing, procDamage * 9.25f);
             },
             ParticleSequenceWound::new
     );
@@ -62,10 +65,11 @@ public final class Effects {
     public static final InstancedEffect<EntropyEffect> ENTROPY = registerInstanced("entropy", new Display(8, 0x5D10C4), DDDBuiltInDamageType.PSYCHIC.getTypeName(), EntropyEffect::new);
     public static final InstancedEffect<MeltEffect> MELT = registerInstanced("armor_melt", new Display(1, 0x95D408), DDDBuiltInDamageType.ACID.getTypeName(), MeltEffect::new);
     public static final InstancedEffect<DeadlyPoisonEffect> DEADLY_POISON = registerInstanced("deadly_poison", new Display(4, 0x0CED18), DDDBuiltInDamageType.POISON.getTypeName(), DeadlyPoisonEffect::new);
-    public static final BuildupEffect SHOCKWAVE = register("shockwave", new Display(12, 0xFFFFFF), DDDBuiltInDamageType.THUNDER.getTypeName(), (target, procDamage, source) -> {
+    public static final BuildupEffect SHOCKWAVE = register("shockwave", new Display(12, 0xFFFFFF), DDDBuiltInDamageType.THUNDER.getTypeName(), (target, procDamage, source, ignoreImmunities) -> {
                 BuildupSounds.playAt(target, BuildupSounds.SHOCKWAVE_PROC, 1, 1);
                 List<Entity> entities = target.getEntityWorld().getEntitiesInAABBexcluding(source == null ? null : source.getImmediateSource(), new AxisAlignedBB(target.getPositionVector(), target.getPositionVector()).grow(4), entity -> entity instanceof EntityLivingBase);
-                DamageSource fxThunder = new DamageSource("fx_thunder");
+                EffectDamageSource fxThunder = new EffectDamageSource("fx_thunder");
+                fxThunder.ignoreImmunities = ignoreImmunities;
                 for (Entity entity : entities) {
                     entity.attackEntityFrom(fxThunder, procDamage * 2.2f);
                 }

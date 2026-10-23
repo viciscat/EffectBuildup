@@ -7,5 +7,5 @@ import javax.annotation.Nullable;
 
 @FunctionalInterface
 public interface EffectApplier {
-    void applyEffect(EntityLivingBase target, int procDamage, @Nullable DamageSource source);
+    void applyEffect(EntityLivingBase target, int procDamage, @Nullable DamageSource source, boolean ignoreImmunities);
 }

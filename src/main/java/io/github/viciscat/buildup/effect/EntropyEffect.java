@@ -14,7 +14,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EntropyEffect extends EffectInstance {
     public static final TextureAtlasSprite PARTICLE = BuildupParticleManager.createSprite("entropy", 128, 76, 16, 16);
-    private static final DamageSource DAMAGE_SOURCE = new DamageSource("fx_psychic").setDamageBypassesArmor();
+    private static final String DAMAGE_TYPE = "fx_psychic";
+
     public EntropyEffect() {
         super(new StackDurationStrategy.RefreshStrategy(60 * 20));
     }
@@ -59,7 +60,7 @@ public class EntropyEffect extends EffectInstance {
     public static class EventHandler {
         @SubscribeEvent
         public static void onHurt(LivingHurtEvent event) {
-            if (event.getSource().getDamageType().equals(DAMAGE_SOURCE.getDamageType())) return;
+            if (event.getSource().getDamageType().equals(DAMAGE_TYPE)) return;
             EntityLivingBase target = event.getEntityLiving();
             EffectTracker tracker = EffectTracker.get(target);
             if (tracker == null) return;
@@ -71,7 +72,7 @@ public class EntropyEffect extends EffectInstance {
                 } else {
                     multiplier += entropy.getStacks() * 0.05f;
                 }
-                target.attackEntityFrom(DAMAGE_SOURCE, amount * multiplier);
+                target.attackEntityFrom(entropy.dmgSrc(DAMAGE_TYPE).setDamageBypassesArmor(), amount * multiplier);
             });
         }
     }

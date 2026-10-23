@@ -25,7 +25,7 @@ public class DecayedEffect extends EffectInstance {
         super.proc(target, procDamage, source);
         if (getStacks() >= 14) {
             stackDurationStrategy.setStacks(8);
-            target.attackEntityFrom(new DamageSource("fx_necrotic").setDamageBypassesArmor(), procDamage * 12.5f);
+            target.attackEntityFrom(dmgSrc("fx_necrotic").setDamageBypassesArmor(), procDamage * 12.5f);
             BuildupSounds.playAt(target, BuildupSounds.DECAYED_20_PROC, 1, 1);
         } else {
             BuildupSounds.playAt(target, BuildupSounds.DECAYED_PROC, 1, 1);

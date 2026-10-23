@@ -27,6 +27,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -39,6 +40,7 @@ import slimeknights.tconstruct.library.utils.TinkerUtil;
 import yeelp.distinctdamagedescriptions.api.DDDAPI;
 import yeelp.distinctdamagedescriptions.api.DDDDamageType;
 import yeelp.distinctdamagedescriptions.capability.IDamageDistribution;
+import yeelp.distinctdamagedescriptions.event.classification.GatherDefensesEvent;
 import yeelp.distinctdamagedescriptions.init.DDDEnchantments;
 import yeelp.distinctdamagedescriptions.registries.DDDRegistries;
 import yeelp.distinctdamagedescriptions.util.lib.DDDMaps;
@@ -65,6 +67,13 @@ public class BuildupEventHandler {
                 .flatMap(tracker -> tracker.getInstance(Effects.FROZEN))
                 .filter(StunningEffect::shouldBeStunned)
                 .ifPresent(_ -> event.setCanceled(true));
+    }
+
+    @SubscribeEvent
+    public static void onGatherDefenses(GatherDefensesEvent event) {
+        if (event.getSource() instanceof EffectDamageSource source && source.ignoreImmunities) {
+            DDDRegistries.distributions.getDamageDistribution(source, event.getDefender()).ifPresent(distribution -> distribution.getCategories().forEach(event::removeImmunity));
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)

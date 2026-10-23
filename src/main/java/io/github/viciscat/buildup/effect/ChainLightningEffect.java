@@ -48,7 +48,7 @@ public class ChainLightningEffect extends EffectInstance {
             entities.stream()
                     .sorted(Comparator.comparingDouble(entity -> entity.getDistanceSq(target)))
                     .limit(targetCount)
-                    .forEach(entity -> entity.attackEntityFrom(new DamageSource("fx_lightning"), procDamage * multiplier));
+                    .forEach(entity -> entity.attackEntityFrom(dmgSrc("fx_lightning"), procDamage * multiplier));
         }
         ticks++;
     }

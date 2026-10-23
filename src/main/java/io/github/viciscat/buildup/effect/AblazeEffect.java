@@ -1,6 +1,7 @@
 package io.github.viciscat.buildup.effect;
 
 import io.github.viciscat.buildup.BuildupSounds;
+import io.github.viciscat.buildup.EffectDamageSource;
 import io.github.viciscat.buildup.particle.BasicParticle;
 import io.github.viciscat.buildup.particle.BuildupParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -22,7 +23,7 @@ public class AblazeEffect extends EffectInstance {
         super.tick(target);
         activeFor++;
         if (activeFor % 20 == 0) {
-            target.attackEntityFrom(new DamageSource("fx_fire"), procDamage * 0.55f);
+            target.attackEntityFrom(dmgSrc("fx_fire"), procDamage * 0.55f);
         }
     }
 

@@ -27,7 +27,7 @@ public class JudgementEffect extends EffectInstance {
     public void proc(EntityLivingBase target, int procDamage, @Nullable DamageSource source) {
         super.proc(target, procDamage, source);
         if (getStacks() > 6) stackDurationStrategy.setStacks(6);
-        target.attackEntityFrom(new DamageSource("fx_radiant"), procDamage * 2.5f);
+        target.attackEntityFrom(dmgSrc("fx_radiant"), procDamage * 2.5f);
     }
 
     public float getDamageReduction() {
