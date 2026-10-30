@@ -22,7 +22,7 @@ public abstract class BuildupEffect {
         this.damageTypeName = Objects.requireNonNull(damageTypeName);
     }
 
-    public abstract void applyEffect(EntityLivingBase entity, int procDamage, @Nullable DamageSource source, boolean ignoreImmunities);
+    public abstract void applyEffect(EntityLivingBase entity, float procDamage, @Nullable DamageSource source, boolean ignoreImmunities);
 
     public void applyClientEffect(EntityLivingBase base) {}
 
@@ -50,7 +50,7 @@ public abstract class BuildupEffect {
     public static BuildupEffect create(String id, Display display, String damageTypeName, EffectApplier applier, Consumer<EntityLivingBase> clientApplier) {
         return new BuildupEffect(id, display, damageTypeName) {
             @Override
-            public void applyEffect(EntityLivingBase entity, int procDamage, @Nullable DamageSource source, boolean ignoreImmunities) {
+            public void applyEffect(EntityLivingBase entity, float procDamage, @Nullable DamageSource source, boolean ignoreImmunities) {
                 applier.applyEffect(entity, procDamage, source, ignoreImmunities);
             }
 

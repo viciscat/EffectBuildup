@@ -28,7 +28,7 @@ public class ChainLightningEffect extends EffectInstance {
     }
 
     @Override
-    public void proc(EntityLivingBase target, int procDamage, @Nullable DamageSource source) {
+    public void proc(EntityLivingBase target, float procDamage, @Nullable DamageSource source) {
         super.proc(target, procDamage, source);
         sourceUUID = Optional.ofNullable(source).map(DamageSource::getTrueSource).map(Entity::getUniqueID).orElse(null);
     }

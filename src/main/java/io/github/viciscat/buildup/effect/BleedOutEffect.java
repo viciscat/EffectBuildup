@@ -1,7 +1,6 @@
 package io.github.viciscat.buildup.effect;
 
 import io.github.viciscat.buildup.BuildupSounds;
-import io.github.viciscat.buildup.EffectDamageSource;
 import io.github.viciscat.buildup.network.BuildupPacketHandler;
 import io.github.viciscat.buildup.network.S2CBleedOutSlash;
 import io.github.viciscat.buildup.particle.BasicParticle;
@@ -51,7 +50,7 @@ public class BleedOutEffect extends EffectInstance {
     }
 
     @Override
-    public void proc(EntityLivingBase target, int procDamage, DamageSource source) {
+    public void proc(EntityLivingBase target, float procDamage, DamageSource source) {
         super.proc(target, procDamage, source);
         if (getStacks() >= 22) {
             stackDurationStrategy.setStacks(5);

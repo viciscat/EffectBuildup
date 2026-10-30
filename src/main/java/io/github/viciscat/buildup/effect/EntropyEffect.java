@@ -21,7 +21,7 @@ public class EntropyEffect extends EffectInstance {
     }
 
     @Override
-    public void proc(EntityLivingBase target, int procDamage, DamageSource source) {
+    public void proc(EntityLivingBase target, float procDamage, DamageSource source) {
         super.proc(target, procDamage, source);
         stackDurationStrategy.setStacks(Math.min(8, stackDurationStrategy.getStacks()));
     }

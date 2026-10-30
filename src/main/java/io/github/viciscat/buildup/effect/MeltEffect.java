@@ -29,7 +29,7 @@ public class MeltEffect extends EffectInstance {
     }
 
     @Override
-    public void proc(EntityLivingBase target, int procDamage, DamageSource source) {
+    public void proc(EntityLivingBase target, float procDamage, DamageSource source) {
         super.proc(target, procDamage, source);
         applyModifiers(target);
     }

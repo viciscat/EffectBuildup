@@ -25,7 +25,7 @@ public class MegabonkEffect extends StunningEffect {
     }
 
     @Override
-    public void proc(EntityLivingBase target, int procDamage, DamageSource source) {
+    public void proc(EntityLivingBase target, float procDamage, DamageSource source) {
         super.proc(target, procDamage, source);
         setStunTime(4, target);
         target.attackEntityFrom(dmgSrc("fx_bludgeoning"), procDamage * 4.25f);

@@ -1,7 +1,6 @@
 package io.github.viciscat.buildup.effect;
 
 import io.github.viciscat.buildup.BuildupSounds;
-import io.github.viciscat.buildup.EffectDamageSource;
 import io.github.viciscat.buildup.particle.BasicParticle;
 import io.github.viciscat.buildup.particle.BuildupParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -28,7 +27,7 @@ public class AblazeEffect extends EffectInstance {
     }
 
     @Override
-    public void proc(EntityLivingBase target, int procDamage, DamageSource source) {
+    public void proc(EntityLivingBase target, float procDamage, DamageSource source) {
         this.procDamage += this.procDamage == 0 ? procDamage : procDamage * 0.02f;
         stackDurationStrategy.stack();
         shouldSync = true;

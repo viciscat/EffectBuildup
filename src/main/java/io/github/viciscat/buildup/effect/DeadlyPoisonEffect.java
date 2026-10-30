@@ -18,7 +18,7 @@ public class DeadlyPoisonEffect extends EffectInstance {
     }
 
     @Override
-    public void proc(EntityLivingBase target, int procDamage, DamageSource source) {
+    public void proc(EntityLivingBase target, float procDamage, DamageSource source) {
         previousProcDamage += this.procDamage * 0.1f;
         super.proc(target, procDamage, source);
         ticks = 0;

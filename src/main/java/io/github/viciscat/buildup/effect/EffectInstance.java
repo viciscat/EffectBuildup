@@ -38,7 +38,7 @@ public class EffectInstance implements INBTSerializable<NBTTagCompound> {
         shouldSync = true;
     }
 
-    public void proc(EntityLivingBase target, int procDamage, @Nullable DamageSource source) {
+    public void proc(EntityLivingBase target, float procDamage, @Nullable DamageSource source) {
         this.procDamage = procDamage;
         stackDurationStrategy.stack();
         shouldSync = true;

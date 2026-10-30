@@ -88,9 +88,9 @@ class BuildupTrackerImpl implements BuildupTracker, ICapabilitySerializable<NBTT
             amount *= EffectTracker.getOptional(entity).flatMap(effectTracker -> effectTracker.getInstance(Effects.UNSTABLE)).map(UnstableEffect::getBuildupMultiplier).orElse(1f);
             int triggers = buildup.computeIfAbsent(effect, BuildUp::new).add(amount, ignoreImmunities);
             for (int i = 0; i < triggers; i++) {
-                int damage = procDamage.getOrDefault(effect.getDamageType(), -1f).intValue();
+                float damage = procDamage.getOrDefault(effect.getDamageType(), -1f);
                 if (damage < 0) {
-                    damage = procDamage.values().stream().mapToInt(Float::intValue).sum() / 2;
+                    damage = (float) (procDamage.values().stream().mapToDouble(Float::doubleValue).sum() / 2);
                 }
                 BuildupMod.LOGGER.info("Applying effect {} to '{}' ({}) with {} damage", effect.getId(), entity.getName(), entity.getEntityId(), damage);
                 effect.applyEffect(entity, damage, source, ignoreImmunities);

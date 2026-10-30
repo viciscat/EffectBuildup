@@ -48,7 +48,7 @@ public class BuildupCommand extends CommandBase {
                 if (!(effect instanceof InstancedEffect<?> instancedEffect)) throw new CommandException("Unknown effect: " + args[4]);
                 EffectTracker tracker = EffectTracker.get(entity);
                 if (tracker == null) throw new CommandException("Entity doesn't have an effect tracker somehow");
-                tracker.getOrCreateInstance(instancedEffect).proc(entity, parseInt(args[4]), null);
+                tracker.getOrCreateInstance(instancedEffect).proc(entity, (float) parseDouble(args[4]), null);
                 S2CBuildupProc message = new S2CBuildupProc(entity, effect);
                 BuildupPacketHandler.INSTANCE.sendToAllTracking(message, entity);
                 if (entity instanceof EntityPlayerMP playerMP) BuildupPacketHandler.INSTANCE.sendTo(message, playerMP);

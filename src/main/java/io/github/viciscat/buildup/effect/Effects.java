@@ -10,7 +10,6 @@ import io.github.viciscat.buildup.particle.ParticleSequenceWound;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import yeelp.distinctdamagedescriptions.api.DDDDamageType;

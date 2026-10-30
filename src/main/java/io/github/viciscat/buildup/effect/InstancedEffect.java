@@ -23,7 +23,7 @@ public class InstancedEffect<T extends EffectInstance> extends BuildupEffect {
     }
 
     @Override
-    public void applyEffect(EntityLivingBase entity, int procDamage, @Nullable DamageSource source, boolean ignoreImmunities) {
+    public void applyEffect(EntityLivingBase entity, float procDamage, @Nullable DamageSource source, boolean ignoreImmunities) {
         EffectTracker tracker = EffectTracker.get(entity);
         if (tracker == null) return;
         T instance = tracker.getOrCreateInstance(this);

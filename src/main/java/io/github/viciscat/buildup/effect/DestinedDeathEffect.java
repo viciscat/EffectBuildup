@@ -21,7 +21,7 @@ public class DestinedDeathEffect extends EffectInstance {
     }
 
     @Override
-    public void proc(EntityLivingBase target, int procDamage, @Nullable DamageSource source) {
+    public void proc(EntityLivingBase target, float procDamage, @Nullable DamageSource source) {
         super.proc(target, procDamage, source);
         combinedProcDamage += this.procDamage;
         applyModifier(target);
