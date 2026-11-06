@@ -8,6 +8,7 @@ import arekkuusu.enderskills.api.configuration.DSLEvaluator;
 import arekkuusu.enderskills.api.event.SkillActionableEvent;
 import arekkuusu.enderskills.api.event.SkillDamageEvent;
 import arekkuusu.enderskills.api.registry.Skill;
+import arekkuusu.enderskills.common.skill.ability.BaseAbility;
 import io.github.viciscat.buildup.capabilities.BuildupTracker;
 import io.github.viciscat.buildup.capabilities.EffectTracker;
 import io.github.viciscat.buildup.config.AttackConfig;
@@ -27,11 +28,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.registries.IForgeRegistry;
 import slimeknights.tconstruct.library.materials.Material;
 import slimeknights.tconstruct.library.tinkering.PartMaterialType;
 import slimeknights.tconstruct.library.tinkering.TinkersItem;
@@ -54,6 +57,7 @@ import java.util.function.Consumer;
 @Mod.EventBusSubscriber(modid = Tags.MOD_ID)
 public class BuildupEventHandler {
     private static final Reference2ObjectMap<DamageSource, SkillDamageEvent> SOURCE_TO_EVENT = new Reference2ObjectArrayMap<>();
+    private static IForgeRegistry<Skill> skillRegistry;
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onSkillDamage(SkillDamageEvent event) {
@@ -76,6 +80,11 @@ public class BuildupEventHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void onSkillsRegistry(RegistryEvent.Register<Skill> event) {
+        skillRegistry = event.getRegistry();
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onEntityHurt(LivingDamageEvent event) {
         BuildupTracker tracker = BuildupTracker.get(event.getEntityLiving());
@@ -91,14 +100,31 @@ public class BuildupEventHandler {
         DamageSource source = event.getSource();
         SkillDamageEvent skillDamageEvent = SOURCE_TO_EVENT.get(source);
         if (skillDamageEvent != null) {
-            Skill skill = skillDamageEvent.getSkill();
+            Skill skill;
+            boolean isDOT = event.getSource().damageType.equals(BaseAbility.DAMAGE_DOT_TYPE);
+            if (isDOT) {
+                skill = Capabilities.get(event.getEntityLiving())
+                        .flatMap(skills -> skills.getActive(skillDamageEvent.getSkill()))
+                        .map(holder -> {
+                            int i = holder.data.id.lastIndexOf(':'); // : from the resource location
+                            if (i <= 0) return holder.data.skill;
+                            i = holder.data.id.lastIndexOf(':', i - 1); // : from the id that effects get
+                            if (i < 0) return holder.data.skill;
+                            ResourceLocation location = new ResourceLocation(holder.data.id.substring(i + 1));
+                            Skill value = skillRegistry.getValue(location);
+                            return value == null ? holder.data.skill : value;
+                        })
+                        .orElse(skillDamageEvent.getSkill());
+            } else {
+                skill = skillDamageEvent.getSkill();
+            }
             DSLConfig config = EnderSkillsAPI.SKILL_DSL_CONFIG_MAP.get(skill.getRegistryName());
             Capabilities.get(source.getTrueSource())
-                    .flatMap(skills -> skills.getOwned(skill).or(() -> skills.getActive(skill).map(holder -> holder.data.skill).flatMap(skills::getOwned)))
+                    .flatMap(skills -> skills.getOwned(skill))
                     .ifPresent(skillInfo -> {
                         final int level = skillInfo instanceof InfoUpgradeable upgradeable ? upgradeable.getLevel() : 0;
-                        config.map.keySet().stream().filter(s -> s.startsWith("BUILDUP:")).forEach(id -> {
-                            BuildupEffect effect = Effects.get(id.split(":", 2)[1].trim());
+                        config.map.keySet().stream().filter(s -> s.startsWith("BUILDUP:")).filter(s -> isDOT == s.endsWith("_DOT")).forEach(id -> {
+                            BuildupEffect effect = Effects.get(id.replace("_DOT", "").split(":", 2)[1].trim());
                             if (effect == null) return;
                             float v = DSLEvaluator.evaluateFloat(skill, id, level, 1);
                             addEffect.accept(effect, v);

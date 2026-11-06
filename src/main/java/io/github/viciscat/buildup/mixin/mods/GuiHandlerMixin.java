@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -31,8 +32,15 @@ public class GuiHandlerMixin {
     private void addEffectSkills(int id, EntityPlayer player, World world, int x, int y, int z, CallbackInfoReturnable<Object> cir) {
         Effects.forEach(effect -> {
             String effectId = "BUILDUP:" + effect.getId();
-            setValue(effectId, (skill, level) -> DSLEvaluator.evaluateFloat(skill, effectId, level, 1));
-            setSuffix(effectId, "suffix_amount");
+            String effectIdDot = "BUILDUP:" + effect.getId() + "_DOT";
+            buildup$addToGui(effectId);
+            buildup$addToGui(effectIdDot);
         });
+    }
+
+    @Unique
+    private static void buildup$addToGui(String effectId) {
+        setValue(effectId, (skill, level) -> DSLEvaluator.evaluateFloat(skill, effectId, level, 1));
+        setSuffix(effectId, "suffix_amount");
     }
 }
