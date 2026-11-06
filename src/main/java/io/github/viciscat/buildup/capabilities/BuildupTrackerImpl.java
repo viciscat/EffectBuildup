@@ -4,6 +4,7 @@ import io.github.viciscat.buildup.BuildupMod;
 import io.github.viciscat.buildup.MaterialAndPart;
 import io.github.viciscat.buildup.config.BuildupConfig;
 import io.github.viciscat.buildup.config.DefenseConfig;
+import io.github.viciscat.buildup.config.RawConfig;
 import io.github.viciscat.buildup.effect.BuildupEffect;
 import io.github.viciscat.buildup.effect.Effects;
 import io.github.viciscat.buildup.effect.UnstableEffect;
@@ -185,7 +186,7 @@ class BuildupTrackerImpl implements BuildupTracker, ICapabilitySerializable<NBTT
                 if (slot.getSlotType() == EntityEquipmentSlot.Type.HAND) continue;
                 record DistConf(IArmorDistribution dist, DefenseConfig defense) {}
                 ItemStack stack = entity.getItemStackFromSlot(slot);
-                final int extraDefense = EnchantmentHelper.getEnchantmentLevel(BuildupEnchantments.BUILDUP_DEFENSE, stack) * 100 +
+                final int extraDefense = EnchantmentHelper.getEnchantmentLevel(BuildupEnchantments.BUILDUP_DEFENSE, stack) * RawConfig.defense.defenseEnchantmentBuildup +
                         BuildupTinkerModifiers.getCurrent(stack, BuildupTinkerModifiers.BUILDUP_DEFENSE);
                 max += DDDAPI.accessor.getArmorResistances(stack)
                         .flatMap(dist -> BuildupConfig.get().armorDefense().get(stack.getItem()).map(c -> new DistConf(dist, c)))

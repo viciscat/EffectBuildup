@@ -2,6 +2,7 @@ package io.github.viciscat.buildup.mixin.mods;
 
 import io.github.viciscat.buildup.BuildupGunUpgrades;
 import io.github.viciscat.buildup.config.BuildupConfig;
+import io.github.viciscat.buildup.config.RawConfig;
 import io.github.viciscat.buildup.effect.BuildupEffect;
 import io.github.viciscat.buildup.enchantment.BuildupEnchantments;
 import io.github.viciscat.buildup.injected.ExtendedProjectile;
@@ -56,7 +57,7 @@ public class GenericProjectileMixin implements ExtendedProjectile {
                 buildup$addToEffect(entry.getKey(), entry.getIntValue());
             }
         });
-        int bonusBuildup = EnchantmentHelper.getEnchantmentLevel(BuildupEnchantments.BUILDUP_OFFENSE, mainhand) * 100;
+        int bonusBuildup = EnchantmentHelper.getEnchantmentLevel(BuildupEnchantments.BUILDUP_OFFENSE, mainhand) * RawConfig.attack.offenseEnchantmentBuildup;
         buildup$addToEffect(null, bonusBuildup);
     }
 

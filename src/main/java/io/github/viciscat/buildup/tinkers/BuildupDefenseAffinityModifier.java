@@ -3,6 +3,7 @@ package io.github.viciscat.buildup.tinkers;
 import c4.conarm.lib.modifiers.ArmorModifier;
 import c4.conarm.lib.utils.RecipeMatchHolder;
 import io.github.viciscat.buildup.BuildupItems;
+import io.github.viciscat.buildup.config.RawConfig;
 import io.github.viciscat.buildup.effect.BuildupEffect;
 import net.minecraft.nbt.NBTTagCompound;
 import slimeknights.tconstruct.library.modifiers.ModifierAspect;
@@ -10,7 +11,7 @@ import slimeknights.tconstruct.library.modifiers.ModifierAspect;
 public class BuildupDefenseAffinityModifier extends ArmorModifier {
     public BuildupDefenseAffinityModifier(BuildupEffect effect) {
         super(effect.getId() + "_affinity", effect.getDisplay().color());
-        addAspects(new ModifierAspect.MultiAspect(this, Integer.MAX_VALUE, 70, 1));
+        addAspects(new ModifierAspect.MultiAspect(this, Integer.MAX_VALUE, RawConfig.defense.conarmDefenseSpecificAffinity, 1));
         RecipeMatchHolder.addItem(this, BuildupItems.effectToDust.get(effect));
     }
 

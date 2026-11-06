@@ -44,6 +44,12 @@ public class RawConfig {
         public String[] materialPartDefense = new String[]{
                 "magmaslime:head global 30, ablaze 20"
         };
+
+        public int defenseEnchantmentBuildup = 40;
+
+        public int conarmDefenseGeneralAffinity = 30;
+
+        public int conarmDefenseSpecificAffinity = 63;
     }
 
     public static class Attack {
@@ -64,6 +70,8 @@ public class RawConfig {
         public String[] materialPartAttack = new String[]{
                 "magmaslime:head 30, ablaze 20"
         };
+
+        public int offenseEnchantmentBuildup = 30;
 
     }
 }

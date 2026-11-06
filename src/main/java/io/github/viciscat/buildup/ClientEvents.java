@@ -1,6 +1,7 @@
 package io.github.viciscat.buildup;
 
 import io.github.viciscat.buildup.config.BuildupConfig;
+import io.github.viciscat.buildup.config.RawConfig;
 import io.github.viciscat.buildup.effect.BuildupEffect;
 import io.github.viciscat.buildup.effect.Effects;
 import io.github.viciscat.buildup.enchantment.BuildupEnchantments;
@@ -69,7 +70,7 @@ public class ClientEvents {
             global.add(defenseConfig.global());
             defenseConfig.extras().forEach(addEffect);
         });
-        global.add(EnchantmentHelper.getEnchantmentLevel(BuildupEnchantments.BUILDUP_DEFENSE, itemStack) * 100 + BuildupTinkerModifiers.getCurrent(itemStack, BuildupTinkerModifiers.BUILDUP_DEFENSE));
+        global.add(EnchantmentHelper.getEnchantmentLevel(BuildupEnchantments.BUILDUP_DEFENSE, itemStack) * RawConfig.defense.defenseEnchantmentBuildup + BuildupTinkerModifiers.getCurrent(itemStack, BuildupTinkerModifiers.BUILDUP_DEFENSE));
         Effects.forEach(effect -> {
             int i = BuildupTinkerModifiers.getCurrent(itemStack, BuildupTinkerModifiers.DEFENSE_AFFINITY.get(effect));
             if (i > 0) addEffect.accept(effect, i);
@@ -115,7 +116,7 @@ public class ClientEvents {
             global.add(attackConfig.main());
             attackConfig.extras().forEach(addEffect);
         });
-        global.add(EnchantmentHelper.getEnchantmentLevel(BuildupEnchantments.BUILDUP_OFFENSE, itemStack) * 100 + BuildupTinkerModifiers.getCurrent(itemStack, BuildupTinkerModifiers.BUILDUP_OFFENSE));
+        global.add(EnchantmentHelper.getEnchantmentLevel(BuildupEnchantments.BUILDUP_OFFENSE, itemStack) * RawConfig.attack.offenseEnchantmentBuildup + BuildupTinkerModifiers.getCurrent(itemStack, BuildupTinkerModifiers.BUILDUP_OFFENSE));
         Effects.forEach(effect -> {
             int i = BuildupTinkerModifiers.getCurrent(itemStack, BuildupTinkerModifiers.OFFENSE_AFFINITY.get(effect));
             if (i > 0) addEffect.accept(effect, i);

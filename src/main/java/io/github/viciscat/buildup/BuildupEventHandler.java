@@ -13,6 +13,7 @@ import io.github.viciscat.buildup.capabilities.BuildupTracker;
 import io.github.viciscat.buildup.capabilities.EffectTracker;
 import io.github.viciscat.buildup.config.AttackConfig;
 import io.github.viciscat.buildup.config.BuildupConfig;
+import io.github.viciscat.buildup.config.RawConfig;
 import io.github.viciscat.buildup.ddd_effect_buildup.Tags;
 import io.github.viciscat.buildup.effect.BuildupEffect;
 import io.github.viciscat.buildup.effect.Effects;
@@ -157,7 +158,7 @@ public class BuildupEventHandler {
                     .flatMap(dist -> BuildupConfig.get().itemAttack().get(mainhand.getItem()).map(c -> new DistConf(dist, c)))
                     .ifPresent(applyDamageDistribution);
             ignoreImmunities |= EnchantmentHelper.getMaxEnchantmentLevel(DDDEnchantments.slyStrike, base) > 0;
-            int bonusBuildup = EnchantmentHelper.getMaxEnchantmentLevel(BuildupEnchantments.BUILDUP_OFFENSE, base) * 100 +
+            int bonusBuildup = EnchantmentHelper.getMaxEnchantmentLevel(BuildupEnchantments.BUILDUP_OFFENSE, base) * RawConfig.attack.offenseEnchantmentBuildup +
                     BuildupTinkerModifiers.getCurrent(mainhand, BuildupTinkerModifiers.BUILDUP_OFFENSE);
             if (bonusBuildup > 0) {
                 DDDAPI.accessor.getDamageDistribution(mainhand).ifPresent(distribution -> distribution.distributeDamage(bonusBuildup).forEach(addType));
