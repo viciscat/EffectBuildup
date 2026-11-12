@@ -73,5 +73,9 @@ public class RawConfig {
 
         public int offenseEnchantmentBuildup = 30;
 
+        public int offenseGeneralAffinity = 30;
+
+        public int offenseSpecificAffinity = 15;
+
     }
 }

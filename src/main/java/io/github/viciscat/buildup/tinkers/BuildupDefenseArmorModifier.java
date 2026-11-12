@@ -1,6 +1,7 @@
 package io.github.viciscat.buildup.tinkers;
 
 import c4.conarm.lib.modifiers.ArmorModifier;
+import c4.conarm.lib.utils.RecipeMatchHolder;
 import io.github.viciscat.buildup.BuildupItems;
 import io.github.viciscat.buildup.config.RawConfig;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,7 +11,7 @@ class BuildupDefenseArmorModifier extends ArmorModifier {
     BuildupDefenseArmorModifier() {
         super("buildup_defense", -1);
         addAspects(new ModifierAspect.MultiAspect(this, Integer.MAX_VALUE, RawConfig.defense.conarmDefenseGeneralAffinity, 1));
-        addItem(BuildupItems.catalyst);
+        RecipeMatchHolder.addItem(this, BuildupItems.catalyst);
     }
 
     @Override

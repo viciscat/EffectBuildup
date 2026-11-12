@@ -86,6 +86,9 @@ modifier.destined_death_affinity.name=Destined Death Affinity
 modifier.buildup_offense.name=Affinity Catalyst
 modifier.buildup_defense_armor.name=Affinity Catalyst
 
+enchantment.buildup_defense=Buildup Defense
+enchantment.buildup_offense=Buildup Offense
+
 modifier.bleed_out_affinity_armor.name=Bleed Out Affinity
 modifier.megabonk_affinity_armor.name=Megabonk Affinity
 modifier.wound_affinity_armor.name=Wound Affinity
