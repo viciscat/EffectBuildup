@@ -20,7 +20,12 @@ public class DeconstructionEffect extends EffectInstance{
     }
 
     float getDamageMultiplier() {
-        return 1 + Math.min(30, getStacks()) * 0.03f;
+        float multiplier = 1f;
+        int stacks = getStacks();
+        multiplier += Math.clamp(stacks, 0, 20) * 0.05f;
+        stacks -= 20;
+        multiplier += Math.max(stacks, 0) * 0.00125f;
+        return multiplier;
     }
 
     @Override
